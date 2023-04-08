@@ -7,4 +7,11 @@ body {
   box-sizing: border-box;
   margin: 0;
   font-family: Inter UI, sans-serif;
+  user-select: none;
+}
+
+.ant-pagination {
+  position: absolute;
+  left: 33%;
+  bottom: 30px;
 }

@@ -7,7 +7,7 @@ const Wrapper = styled.article`
   background-color: #ffffff;
   cursor: pointer;
   overflow: hidden;
-  margin-top: 15px;
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
@@ -84,12 +84,23 @@ const LikeCount = styled.span`
   bottom: 3px;
 `;
 
-function Card({ username, img, title, date, description, tags, likesNumber }) {
+function Card({
+  username,
+  img,
+  title,
+  date,
+  description,
+  tags,
+  likesNumber,
+  onClick,
+}) {
   return (
     <Wrapper>
       <CardLeft>
         <LikeContainer>
-          <CardTitle>{title.length > 30 ? trimText(title) : title}</CardTitle>
+          <CardTitle onClick={onClick}>
+            {title.length > 30 ? trimText(title) : title}
+          </CardTitle>
           {/* <CardTitle>{title.length}</CardTitle> */}
           <IoHeartOutline />
           <LikeCount>{likesNumber}</LikeCount>

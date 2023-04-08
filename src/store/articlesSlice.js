@@ -13,13 +13,10 @@ export const fetchArticles = createAsyncThunk(
       const response = await fetch(
         `https://blog.kata.academy/api/articles?limit=5&offset=${offset}`
       );
-
       if (!response.ok) {
         throw new Error("Server Error!");
       }
-
       const data = await response.json();
-      // console.log(data);
       return data.articles;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -39,6 +36,7 @@ const articlesSlice = createSlice({
 
   reducers: {
     // сортировка по цене
+    changePage(state) {},
     sortTicketByPrice(state) {},
     // сортировка по скорости
     sortTicketByCheap(state) {},

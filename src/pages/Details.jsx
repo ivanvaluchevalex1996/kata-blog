@@ -1,21 +1,19 @@
-// import axios from "axios";
-// import { useState, useEffect } from "react";
-// import { useHistory, useParams } from "react-router-dom";
-// // import { searchByCountry } from "../config";
-// // import Button from "../components/Button/Button";
-// import Info from "../components/Info/Info";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { getArticle } from "../service/config";
+import Info from "../components/Info/Info";
 
-// function Details() {
-//   const { name } = useParams();
-//   const { push } = useHistory();
-//   const [country, setCountry] = useState(null);
+function Details() {
+  const [article, setArticle] = useState(null);
+  const { push } = useHistory();
 
-//   console.log(name);
-//   console.log(country);
-//   useEffect(() => {
-//     axios.get(searchByCountry(name)).then(({ data }) => setCountry(data[0]));
-//   }, [name]);
+  const { slug } = useParams();
+  useEffect(() => {
+    axios.get(getArticle(slug)).then(({ data }) => setArticle(data.article));
+  }, [slug]);
+  //   console.log(article);
+  return <div>{article && <Info push={push} {...article} />}</div>;
+}
 
-//   return <div>{country && <Info push={push} {...country} />}</div>;
-// }
-// export default Details;
+export default Details;

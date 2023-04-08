@@ -13,13 +13,21 @@ const Wrapper = styled.div`
   margin: 0 15px;
 `;
 // для перехода на главную страницу по клику на кнопку в хедере
-const Title = styled(Link).attrs({ to: "/" })`
+// const Title = styled(Link).attrs({ to: "/", replace: true })`
+const Title = styled(Link)`
   font-size: 18px;
   line-height: 28px;
   text-decoration: none;
   cursor: pointer;
   color: rgba(0, 0, 0, 0.85);
 `;
+// const Title = styled(Link).attrs({ to: "/", replace: true })`
+//   font-size: 18px;
+//   line-height: 28px;
+//   text-decoration: none;
+//   cursor: pointer;
+//   color: rgba(0, 0, 0, 0.85);
+// `;
 
 const LoginContainer = styled.div`
   display: flex;
@@ -60,7 +68,8 @@ function Header() {
   return (
     <HeaderEl>
       <Wrapper>
-        <Title>Realworld Blog</Title>
+        <Title to={"/"}>Realworld Blog</Title>
+        {/* <Link to={`/`}>Prev</Link> */}
         <LoginContainer>
           <SignIn>Sign In</SignIn>
           <SignUp>Sign Up</SignUp>
