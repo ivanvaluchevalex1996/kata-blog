@@ -15,7 +15,7 @@ function App() {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [results, setResults] = useState(1);
-
+  console.log();
   useEffect(() => {
     axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
     dispatch(fetchArticles(page));
