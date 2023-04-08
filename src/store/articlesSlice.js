@@ -36,7 +36,9 @@ const articlesSlice = createSlice({
 
   reducers: {
     // сортировка по цене
-    changePage(state) {},
+    changePage(state, action) {
+      state.page = action.payload;
+    },
     sortTicketByPrice(state) {},
     // сортировка по скорости
     sortTicketByCheap(state) {},
@@ -64,5 +66,5 @@ const articlesSlice = createSlice({
   },
 });
 
-export const {} = articlesSlice.actions;
+export const { changePage } = articlesSlice.actions;
 export default articlesSlice.reducer;

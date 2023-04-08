@@ -7,30 +7,32 @@ import { fetchArticles } from "../store/articlesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ALL_ARTICLES } from "../service/config";
 import { Pagination } from "antd";
+import { changePage } from "../store/articlesSlice";
 
 function HomePage() {
   const articles = useSelector((state) => state.articles.articles);
-
+  const pageArticles = useSelector((state) => state.articles.page);
   const dispatch = useDispatch();
   const { push } = useHistory();
-  const [page, setPage] = useState(1);
   const [results, setResults] = useState(1);
   useEffect(() => {
     axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
-    dispatch(fetchArticles((page - 1) * 5));
-  }, [page, dispatch]);
-  console.log(page);
+    dispatch(fetchArticles((pageArticles - 1) * 5));
+  }, [pageArticles, dispatch]);
+  console.log(pageArticles);
 
   const articlesPagination = (
     <Pagination
-      current={page}
+      current={pageArticles}
       total={results}
-      onChange={(page) => setPage(page)}
+      // чтобы при нажатии на realworld, пагинация не сбивалась
+      onChange={(page) => dispatch(changePage(page))}
       pageSize={5}
       showSizeChanger={false}
     />
   );
   console.log(articles);
+  console.log(pageArticles);
   return (
     <>
       <List>
