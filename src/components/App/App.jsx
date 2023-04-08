@@ -4,22 +4,22 @@ import Main from "../Main/Main";
 import List from "../List/List";
 import Card from "../Card/Card";
 import axios from "axios";
-import { ALL_ARTICLES, searchByPage } from "../../config";
+import { ALL_ARTICLES } from "../../service/config";
 import { Pagination } from "antd";
+import { Switch, Route } from "react-router-dom"; // 5 версия
+import { useDispatch, useSelector } from "react-redux";
+import { fetchArticles } from "../../store/articlesSlice";
+
 function App() {
-  const [data, setData] = useState([]);
+  const articles = useSelector((state) => state.articles.articles);
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [results, setResults] = useState(1);
-  // useEffect(() => {
-  //   axios.get(ALL_ARTICLES).then((res) => setData(res.data.articles));
-  //   axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
-  // axios.get(ALL_ARTICLES).then((res) => console.log(res));
-  // }, []);
+
   useEffect(() => {
     axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
-    axios.get(searchByPage(page)).then((res) => setData(res.data.articles));
-    // axios.get(ALL_ARTICLES).then((res) => console.log(res));
-  }, [page]);
+    dispatch(fetchArticles(page));
+  }, [page, dispatch]);
 
   const onPaginationChange = (pg) => {
     setPage(pg);
@@ -40,7 +40,7 @@ function App() {
       <Header />
       <Main>
         <List>
-          {data.map((el) => (
+          {articles.map((el) => (
             <Card
               key={el.createdAt}
               username={el.author.username}
@@ -54,7 +54,7 @@ function App() {
             />
           ))}
         </List>
-        {articlesPagination}
+        {articles.length > 0 ? articlesPagination : null}
       </Main>
     </>
   );

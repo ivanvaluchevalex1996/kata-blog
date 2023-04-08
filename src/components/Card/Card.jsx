@@ -85,7 +85,6 @@ const LikeCount = styled.span`
 `;
 
 function Card({ username, img, title, date, description, tags, likesNumber }) {
-  console.log(trimText(title));
   return (
     <Wrapper>
       <CardLeft>
