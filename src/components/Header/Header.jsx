@@ -12,8 +12,7 @@ const Wrapper = styled.div`
   //   padding: 20px 0;
   margin: 0 15px;
 `;
-// для перехода на главную страницу по клику на кнопку в хедере
-// const Title = styled(Link).attrs({ to: "/", replace: true })`
+
 const Title = styled(Link)`
   font-size: 18px;
   line-height: 28px;
@@ -21,13 +20,6 @@ const Title = styled(Link)`
   cursor: pointer;
   color: rgba(0, 0, 0, 0.85);
 `;
-// const Title = styled(Link).attrs({ to: "/", replace: true })`
-//   font-size: 18px;
-//   line-height: 28px;
-//   text-decoration: none;
-//   cursor: pointer;
-//   color: rgba(0, 0, 0, 0.85);
-// `;
 
 const LoginContainer = styled.div`
   display: flex;
@@ -36,7 +28,7 @@ const LoginContainer = styled.div`
   padding: 20px 0;
 `;
 
-const SignIn = styled(Link).attrs({ to: "/" })`
+const SignIn = styled(Link).attrs({ to: "/sign-in" })`
   font-size: 18px;
   line-height: 28px;
   color: rgba(0, 0, 0, 0.85);
@@ -48,7 +40,7 @@ const SignIn = styled(Link).attrs({ to: "/" })`
   padding: 8px 18px;
 `;
 
-const SignUp = styled(Link).attrs({ to: "/" })`
+const SignUp = styled(Link).attrs({ to: "/sign-up" })`
   font-size: 18px;
   line-height: 28px;
   text-decoration: none;
@@ -71,8 +63,8 @@ function Header() {
         <Title to={"/"}>Realworld Blog</Title>
         {/* <Link to={`/`}>Prev</Link> */}
         <LoginContainer>
-          <SignIn>Sign In</SignIn>
-          <SignUp>Sign Up</SignUp>
+          <SignIn to={"/sign-in"}>Sign In</SignIn>
+          <SignUp to={"/sign-up"}>Sign Up</SignUp>
         </LoginContainer>
       </Wrapper>
     </HeaderEl>
