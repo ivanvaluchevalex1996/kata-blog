@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom"; // 5 версия
+import { useSelector, useDispatch } from "react-redux";
+import { selectIsAuth } from "../../store/authSlice";
+import { logout } from "../../store/authSlice";
+import { useHistory } from "react-router-dom";
 
 const HeaderEl = styled.header`
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -9,7 +13,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  //   padding: 20px 0;
   margin: 0 15px;
 `;
 
@@ -56,15 +59,90 @@ const SignUp = styled(Link).attrs({ to: "/sign-up" })`
   }
 `;
 
+const ButtonLogOut = styled.button`
+  font-size: 18px;
+  line-height: 28px;
+  text-decoration: none;
+  background: unset;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 8px 18px;
+  color: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.75);
+  margin-left: 10px;
+  &:hover {
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+`;
+
+const ButtonCreateArticle = styled(Link).attrs({ to: "/new-article" })`
+  text-decoration: none;
+  background: unset;
+  cursor: pointer;
+  border-radius: 5px;
+  color: rgb(82, 196, 26);
+  border: 1px solid rgb(82, 196, 26);
+  font-size: 14px;
+  line-height: 22px;
+  padding: 6px 10px;
+  &:hover {
+    color: #ffffff;
+    background-color: rgb(82, 196, 26);
+  }
+`;
+
+const Photo = styled(Link).attrs({ to: "/profile" })`
+  font-size: 18px;
+  line-height: 28px;
+  text-decoration: none;
+  background: unset;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 8px 18px;
+  color: rgb(82, 196, 26);
+  border: 1px solid rgb(82, 196, 26);
+  margin-left: 10px;
+
+  &:hover {
+    color: #ffffff;
+    background-color: rgb(82, 196, 26);
+  }
+`;
+
 function Header() {
+  const isAuth = useSelector(selectIsAuth);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const onClickLogout = () => {
+    if (window.confirm("Вы точно хотите выйти?")) {
+      dispatch(logout());
+      // для того чтобы по выходу из учетки перебрасывало на главную
+      history.push("/");
+      localStorage.removeItem("token");
+    }
+  };
   return (
     <HeaderEl>
       <Wrapper>
         <Title to={"/"}>Realworld Blog</Title>
-        {/* <Link to={`/`}>Prev</Link> */}
         <LoginContainer>
-          <SignIn to={"/sign-in"}>Sign In</SignIn>
-          <SignUp to={"/sign-up"}>Sign Up</SignUp>
+          {isAuth ? (
+            <>
+              {/* <ButtonCreateArticle to={"/new-article"}> */}
+              <ButtonCreateArticle to={"/new-article"}>
+                Create Article
+              </ButtonCreateArticle>
+              <Photo to={"/profile"}>asdasdasdasd</Photo>
+              <ButtonLogOut onClick={onClickLogout}>Log Out</ButtonLogOut>
+            </>
+          ) : (
+            <>
+              {" "}
+              <SignIn to={"/sign-in"}>Sign In</SignIn>
+              <SignUp to={"/sign-up"}>Sign Up</SignUp>
+            </>
+          )}
         </LoginContainer>
       </Wrapper>
     </HeaderEl>

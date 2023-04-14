@@ -5,9 +5,8 @@ import trimText from "../../utils/truncate";
 
 const Wrapper = styled.article`
   background-color: #ffffff;
-  cursor: pointer;
   overflow: hidden;
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   border-radius: 5px;

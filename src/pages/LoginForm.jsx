@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAuth, selectIsAuth } from "../store/authSlice";
+import { Redirect } from "react-router-dom";
 const FormContainer = styled.div`
   position: relative;
   background: rgb(255, 255, 255);
@@ -76,15 +78,27 @@ const LabelContainer = styled.div`
   margin-bottom: 12px;
 `;
 
+const TitleInput = styled.span`
+  margin-left: 10px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.75);
+`;
+
 function RegistrationForm() {
   const [error, setError] = useState("");
+  const [errorPass, setErrorPass] = useState("");
+  const dispatch = useDispatch();
+  const isAuth = useSelector(selectIsAuth);
 
   const {
     register,
     handleSubmit,
-    reset,
+    // reset,
     watch,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = useForm({
     mode: "onBlur",
   });
@@ -92,8 +106,18 @@ function RegistrationForm() {
   const email = watch("email");
 
   const onSubmit = (data) => {
+    const userData = {
+      user: {
+        email: data.email,
+        password: data.password,
+      },
+    };
     console.log(data);
-    reset();
+    dispatch(fetchAuth(userData)).then((result) => {
+      if (!result.payload) {
+        setErrorPass("Неверный пароль");
+      }
+    });
   };
 
   useEffect(() => {
@@ -105,38 +129,32 @@ function RegistrationForm() {
     }
   }, [email]);
 
+  if (isAuth) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <FormContainer>
       <FormTitle>Sign In</FormTitle>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <LabelContainer>
           <label htmlFor="email">
-            Email address
+            <TitleInput>Email address</TitleInput>
             <Input type="email" name="email" {...register("email")} />
             {error && <IncorrectData>{error}</IncorrectData>}
           </label>
         </LabelContainer>
         <LabelContainer>
           <label htmlFor="password">
-            Password
+            <TitleInput>Password</TitleInput>
             <Input
               type="password"
               name="password"
               {...register("password", {
-                required: "Поле обязательно к заполнению ",
-                minLength: {
-                  value: 6,
-                  message: "Слишком короткий пароль",
-                },
-                maxLength: {
-                  value: 40,
-                  message: "Слишком длинный пароль",
-                },
+                required: true,
               })}
             />
-            {errors?.password && (
-              <IncorrectData>{errors?.password?.message}</IncorrectData>
-            )}
+            {errorPass && <IncorrectData>{errorPass}</IncorrectData>}
           </label>
         </LabelContainer>
 

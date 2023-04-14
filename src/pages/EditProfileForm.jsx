@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { Link } from "react-router-dom"; // 5 версия
 
 const FormContainer = styled.div`
   position: relative;
@@ -87,23 +85,8 @@ const TitleInput = styled.span`
   color: rgba(0, 0, 0, 0.75);
 `;
 
-const SignIn = styled(Link).attrs({ to: "/sign-in" })`
-  color:color: rgb(24, 144, 255);
-  text-decoration: none;
-`;
-
-const FooterTitle = styled.p`
-  color: rgb(140, 140, 140);
-  font-size: 12px;
-  position: absolute;
-  left: 104px;
-  bottom: 10px;
-`;
-
-function RegistrationForm() {
+function EditProfileForm() {
   const [error, setError] = useState("");
-  const [errorPassword, setErrorPassword] = useState("");
-  const dispatch = useDispatch();
 
   const {
     register,
@@ -116,9 +99,6 @@ function RegistrationForm() {
   });
 
   const email = watch("email");
-  const password = watch("password");
-  const repeatPassword = watch("repeatPassword");
-  const checked = watch("checkbox");
 
   const onSubmit = (data) => {
     console.log(data);
@@ -134,18 +114,9 @@ function RegistrationForm() {
     }
   }, [email]);
 
-  useEffect(() => {
-    // сравниваем значения полей password и repeatPassword и устанавливаем соответствующее значение ошибки
-    if (password !== repeatPassword && repeatPassword.length !== 0) {
-      setErrorPassword("Пароли не совпадают");
-    } else {
-      setErrorPassword("");
-    }
-  }, [password, repeatPassword]);
-
   return (
     <FormContainer>
-      <FormTitle>Create new account</FormTitle>
+      <FormTitle>Edit Profile</FormTitle>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <LabelContainer>
           <label htmlFor="username">
@@ -201,32 +172,15 @@ function RegistrationForm() {
           </label>
         </LabelContainer>
         <LabelContainer>
-          <label htmlFor="repeatPassword">
-            <TitleInput>Repeat Password</TitleInput>
-            <Input
-              type="repeatPassword"
-              name="repeatPassword"
-              {...register("repeatPassword")}
-            />
+          <label htmlFor="imageUrl">
+            <TitleInput>Avatar image (url)</TitleInput>
+            <Input type="imageUrl" name="imageUrl" />
           </label>
         </LabelContainer>
-        {errorPassword && <IncorrectData>{errorPassword}</IncorrectData>}
-        <LabelContainer>
-          <input type="checkbox" name="checkbox" {...register("checkbox")} />
-          <TitleInput>
-            I agree to the processing of my personal information
-          </TitleInput>
-        </LabelContainer>
-        {checked ? null : (
-          <IncorrectData>You have to accept an agreement</IncorrectData>
-        )}
         <SubmitButton value="Create" disabled={!isValid} />
       </Form>
-      <FooterTitle>
-        Already have an account?<SignIn> Sign In</SignIn>.
-      </FooterTitle>
     </FormContainer>
   );
 }
 
-export default RegistrationForm;
+export default EditProfileForm;

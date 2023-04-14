@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ALL_ARTICLES } from "../service/config";
 import { Pagination } from "antd";
 import { changePage } from "../store/articlesSlice";
+// import { fetchToken } from "../service/config";
 
 function HomePage() {
   const articles = useSelector((state) => state.articles.articles);
@@ -16,10 +17,13 @@ function HomePage() {
   const { push } = useHistory();
   const [results, setResults] = useState(1);
   useEffect(() => {
+    // получение количетсва статей
     axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
+    // получение статей
     dispatch(fetchArticles((pageArticles - 1) * 5));
+    // получение токена
+    // fetchToken();
   }, [pageArticles, dispatch]);
-  console.log(pageArticles);
 
   const articlesPagination = (
     <Pagination
@@ -31,8 +35,6 @@ function HomePage() {
       showSizeChanger={false}
     />
   );
-  console.log(articles);
-  console.log(pageArticles);
   return (
     <>
       <List>

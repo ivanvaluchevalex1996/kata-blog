@@ -6,20 +6,37 @@ import NotFound from "../../pages/NotFound";
 import Details from "../../pages/Details";
 import LoginForm from "../../pages/LoginForm";
 import RegistrationForm from "../../pages/RegistrationForm";
+import EditProfileForm from "../../pages/EditProfileForm";
+import CreateArticle from "../../pages/CreateArticle";
+import { useSelector } from "react-redux";
+import { Alert } from "antd";
+
+// import NewArticleForm from "../../pages/NewArticleForm";
 
 function App() {
+  const status = useSelector((state) => state.articles.status);
+  const error = status === "rejected" && (
+    <Alert
+      message="Произошла ошибка. Мы уже работаем над этим."
+      type="error"
+      showIcon
+    />
+  );
   return (
     <>
       <Header />
+      {error}
       <Main>
         <Switch>
           {/* нужно упорядочивать маршруты от конкретных к общим: 1)/dasboard/stats 2)/dashboard  */}
-          <Route exact path="/">
+          <Route exact path="/" component={HomePage}>
             <HomePage />
           </Route>
           <Route path="/articles/:slug" component={Details} />
+          <Route path="/:new-article" component={CreateArticle} />
           <Route path="/:sign-in" component={LoginForm} />
           <Route path="/:sign-up" component={RegistrationForm} />
+          <Route path="/:profile" component={EditProfileForm} />
           <Route component={NotFound} />
         </Switch>
       </Main>

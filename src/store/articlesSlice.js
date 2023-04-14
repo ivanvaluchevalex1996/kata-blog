@@ -1,9 +1,6 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
-
-// фуникция получения билетов
-
-// const addTicketsArr = createAction("tickets/addTicketsArr");
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { BASE_URL } from "../service/config";
 
 export const fetchArticles = createAsyncThunk(
   "articles/fetchArticles",
@@ -11,7 +8,7 @@ export const fetchArticles = createAsyncThunk(
   async function (offset, { rejectWithValue }) {
     try {
       const response = await fetch(
-        `https://blog.kata.academy/api/articles?limit=5&offset=${offset}`
+        `${BASE_URL}articles?limit=5&offset=${offset}`
       );
       if (!response.ok) {
         throw new Error("Server Error!");
@@ -39,16 +36,6 @@ const articlesSlice = createSlice({
     changePage(state, action) {
       state.page = action.payload;
     },
-    sortTicketByPrice(state) {},
-    // сортировка по скорости
-    sortTicketByCheap(state) {},
-    // кнопка, выбрать все фильтры
-    checkAll(state, action) {},
-    // смена галочки на фильтре
-    toggleCheck(state, action) {},
-    // показать еще 5 карточек
-    showMore(state) {},
-    addTicketsArr(state, action) {},
   },
   extraReducers: {
     [fetchArticles.pending]: (state) => {
