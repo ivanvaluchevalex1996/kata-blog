@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { Link } from "react-router-dom"; // 5 версия
+import { fetchRegister, selectIsAuth } from "../store/authSlice";
+import { Redirect } from "react-router-dom";
 
 const FormContainer = styled.div`
   position: relative;
@@ -104,6 +106,7 @@ function RegistrationForm() {
   const [error, setError] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const dispatch = useDispatch();
+  const isAuth = useSelector(selectIsAuth);
 
   const {
     register,
@@ -112,7 +115,7 @@ function RegistrationForm() {
     watch,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const email = watch("email");
@@ -121,8 +124,16 @@ function RegistrationForm() {
   const checked = watch("checkbox");
 
   const onSubmit = (data) => {
+    const userData = {
+      user: {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      },
+    };
+    dispatch(fetchRegister(userData));
     console.log(data);
-    reset();
+    // reset();
   };
 
   useEffect(() => {
@@ -142,6 +153,18 @@ function RegistrationForm() {
       setErrorPassword("");
     }
   }, [password, repeatPassword]);
+
+  if (isAuth) {
+    return <Redirect to="/" />;
+  }
+
+  // const checkEmailExists = async (email) => {
+  //   const response = await fetch(
+  //     `https://blog.kata.academy/api/users?email=${email}`
+  //   );
+  //   const data = await response.json();
+  //   return data.users.length > 0;
+  // };
 
   return (
     <FormContainer>
@@ -173,8 +196,24 @@ function RegistrationForm() {
         <LabelContainer>
           <label htmlFor="email">
             <TitleInput>Email address</TitleInput>
-            <Input type="email" name="email" {...register("email")} />
+            <Input
+              type="email"
+              name="email"
+              {...register("email", { required: true })}
+              // {...register("email", {
+              //   required: "Поле обязательно к заполнению ",
+              //   validate: async (value) => {
+              //     const emailExists = await checkEmailExists(value);
+              //     return (
+              //       !emailExists ||
+              //       "Пользователь с таким email уже зарегистрирован"
+              //     );
+              //   },
+              // })}
+            />
             {error && <IncorrectData>{error}</IncorrectData>}
+            {error.email && <IncorrectData>{error.email}</IncorrectData>}
+            {errors.email && <IncorrectData>{errors.email}</IncorrectData>}
           </label>
         </LabelContainer>
         <LabelContainer>

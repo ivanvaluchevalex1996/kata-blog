@@ -92,34 +92,42 @@ const ButtonCreateArticle = styled(Link).attrs({ to: "/new-article" })`
   }
 `;
 
-const Photo = styled(Link).attrs({ to: "/profile" })`
+const NameUser = styled(Link).attrs({ to: "/profile" })`
   font-size: 18px;
   line-height: 28px;
+  color: rgba(0, 0, 0, 0.85);
+  margin: 0px;
   text-decoration: none;
-  background: unset;
-  cursor: pointer;
-  border-radius: 5px;
-  padding: 8px 18px;
-  color: rgb(82, 196, 26);
-  border: 1px solid rgb(82, 196, 26);
+  font-weight: 600;
   margin-left: 10px;
-
   &:hover {
-    color: #ffffff;
-    background-color: rgb(82, 196, 26);
+    text-decoration: underline;
   }
+`;
+
+const ImageUser = styled.img`
+  width: 46px;
+  height: 46px px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.75);
+  margin-left: 10px;
 `;
 
 function Header() {
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
   const history = useHistory();
+  const name = JSON.parse(localStorage.getItem("data"));
+  const image = JSON.parse(localStorage.getItem("image"));
   const onClickLogout = () => {
     if (window.confirm("Вы точно хотите выйти?")) {
       dispatch(logout());
       // для того чтобы по выходу из учетки перебрасывало на главную
       history.push("/");
       localStorage.removeItem("token");
+      localStorage.removeItem("data");
+      localStorage.removeItem("image");
     }
   };
   return (
@@ -133,12 +141,19 @@ function Header() {
               <ButtonCreateArticle to={"/new-article"}>
                 Create Article
               </ButtonCreateArticle>
-              <Photo to={"/profile"}>asdasdasdasd</Photo>
+              <NameUser to={"/profile"}>{name?.user?.username}</NameUser>
+              <ImageUser
+                src={
+                  image
+                    ? name.user.image
+                    : "https://static.productionready.io/images/smiley-cyrus.jpg"
+                }
+              />
+              {/* <ImageUser src="https://static.productionready.io/images/smiley-cyrus.jpg" /> */}
               <ButtonLogOut onClick={onClickLogout}>Log Out</ButtonLogOut>
             </>
           ) : (
             <>
-              {" "}
               <SignIn to={"/sign-in"}>Sign In</SignIn>
               <SignUp to={"/sign-up"}>Sign Up</SignUp>
             </>

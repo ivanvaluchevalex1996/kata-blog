@@ -96,7 +96,7 @@ function RegistrationForm() {
   const {
     register,
     handleSubmit,
-    // reset,
+    reset,
     watch,
     formState: { isValid },
   } = useForm({
@@ -112,7 +112,7 @@ function RegistrationForm() {
         password: data.password,
       },
     };
-    console.log(data);
+    // console.log(data);
     dispatch(fetchAuth(userData)).then((result) => {
       if (!result.payload) {
         setErrorPass("Неверный пароль");

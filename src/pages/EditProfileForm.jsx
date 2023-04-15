@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { fetchEditData, selectIsAuth } from "../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 const FormContainer = styled.div`
   position: relative;
@@ -87,6 +90,8 @@ const TitleInput = styled.span`
 
 function EditProfileForm() {
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const isAuth = useSelector(selectIsAuth);
 
   const {
     register,
@@ -101,8 +106,19 @@ function EditProfileForm() {
   const email = watch("email");
 
   const onSubmit = (data) => {
+    const userData = {
+      user: {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        image: data.imageUrl,
+      },
+    };
+    dispatch(fetchEditData(userData));
+
     console.log(data);
-    reset();
+    // reset();
+    // return <Redirect to="/" />;
   };
 
   useEffect(() => {
@@ -174,7 +190,21 @@ function EditProfileForm() {
         <LabelContainer>
           <label htmlFor="imageUrl">
             <TitleInput>Avatar image (url)</TitleInput>
-            <Input type="imageUrl" name="imageUrl" />
+            {/* <Input type="text" name="imageUrl" {...register("imageUrl")} /> */}
+            <Input
+              type="text"
+              name="imageUrl"
+              {...register("imageUrl", {
+                required: "Поле обязательно к заполнению ",
+                pattern: {
+                  value: /^(ftp|http|https):\/\/[^ "]+$/,
+                  message: "Введите корректную ссылку на изображение",
+                },
+              })}
+            />
+            {errors.imageUrl && (
+              <IncorrectData>{errors.imageUrl.message}</IncorrectData>
+            )}
           </label>
         </LabelContainer>
         <SubmitButton value="Create" disabled={!isValid} />

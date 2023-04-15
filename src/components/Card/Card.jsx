@@ -58,18 +58,21 @@ const CardImage = styled.img`
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  margin-left: 10px;
 `;
 const CardAuthor = styled.span`
   font-size: 18px;
   line-height: 28px;
   color: rgba(0, 0, 0, 0.85);
   margin: 0px;
+  font-weight: 600;
 `;
 const CardDate = styled.span`
   font-size: 12px;
   line-height: 22px;
   color: rgba(0, 0, 0, 0.5);
   margin: 0px;
+  text-align: end;
 `;
 
 const LikeContainer = styled.div`
