@@ -87,6 +87,37 @@ const LikeCount = styled.span`
   bottom: 3px;
 `;
 
+const DeleteButton = styled.button`
+  text-decoration: none;
+  background: unset;
+  border: 1px solid rgb(245, 34, 45);
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 6px 10px;
+  color: rgb(245, 34, 45);
+  &:hover {
+    color: white;
+    background: rgb(245, 34, 45);
+  }
+`;
+const EditButton = styled.button`
+  text-decoration: none;
+  background: unset;
+  cursor: pointer;
+  border-radius: 5px;
+  color: rgb(82, 196, 26);
+  border: 1px solid rgb(82, 196, 26);
+  font-size: 14px;
+  line-height: 22px;
+  padding: 6px 10px;
+  &:hover {
+    color: white;
+    background: rgb(82, 196, 26);
+  }
+`;
+
 const CardBody = styled.div``;
 
 function Info(props) {
@@ -132,6 +163,8 @@ function Info(props) {
       <CardBody>
         <ReactMarkdown>{body}</ReactMarkdown>
       </CardBody>
+      <DeleteButton>Delete</DeleteButton>
+      <EditButton>Edit</EditButton>
     </Wrapper>
   );
 }

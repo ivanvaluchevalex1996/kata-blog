@@ -111,7 +111,7 @@ function RegistrationForm() {
   const {
     register,
     handleSubmit,
-    reset,
+    // reset,
     watch,
     formState: { errors, isValid },
   } = useForm({

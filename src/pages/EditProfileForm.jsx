@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { fetchEditData, selectIsAuth } from "../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { BASE_URL } from "../service/config";
 
 const FormContainer = styled.div`
   position: relative;
@@ -92,7 +93,7 @@ function EditProfileForm() {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
-
+  const history = useHistory();
   const {
     register,
     handleSubmit,
@@ -115,10 +116,14 @@ function EditProfileForm() {
       },
     };
     dispatch(fetchEditData(userData));
-
+    // dispatch(fetchEditData(userData)).then((response) => {
+    //   console.log(response)
+    //   if (response.status === 200) {
+    //     history.push("/");
+    //   }
+    // });
+    history.push("/");
     console.log(data);
-    // reset();
-    // return <Redirect to="/" />;
   };
 
   useEffect(() => {
@@ -129,6 +134,20 @@ function EditProfileForm() {
       setError("");
     }
   }, [email]);
+
+  // const checkEmailExists = async (email) => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //   }
+  //   const response = await fetch(`${BASE_URL}user?email=${email}`, {
+  //     headers: {
+  //       Authorization: `Token ${token}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   console.log(data);
+  //   // return data?.users.length > 0;
+  // };
 
   return (
     <FormContainer>
@@ -160,7 +179,27 @@ function EditProfileForm() {
         <LabelContainer>
           <label htmlFor="email">
             <TitleInput>Email address</TitleInput>
-            <Input type="email" name="email" {...register("email")} />
+            {/* <Input type="email" name="email" {...register("email")} /> */}
+            <Input
+              type="email"
+              name="email"
+              {...register("email")}
+              // {...register("email", {
+              //   required: true,
+              //   pattern: {
+              //     value: /^\S+@\S+$/i,
+              //     message: "Введите корректный email",
+              //   },
+              //   validate: async (value) => {
+              //     const emailExists = await checkEmailExists(value);
+              //     return (
+              //       !emailExists ||
+              //       "Пользователь с таким email уже зарегистрирован"
+              //     );
+              //   },
+              // })}
+            />
+            {errors.email && <p>{errors.email.message}</p>}
             {error && <IncorrectData>{error}</IncorrectData>}
           </label>
         </LabelContainer>

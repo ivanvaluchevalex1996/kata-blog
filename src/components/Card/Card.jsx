@@ -23,6 +23,7 @@ const CardTitle = styled.span`
   line-height: 28px;
   color: rgb(24, 144, 255);
   margin-right: 10px;
+  cursor: pointer;
 `;
 const CardTags = styled.div`
   max-width: 670px;
