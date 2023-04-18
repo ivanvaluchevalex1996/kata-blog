@@ -130,6 +130,11 @@ function Info(props) {
     tagList,
     title,
   } = props;
+
+  const data = JSON.parse(localStorage.getItem("data"));
+  const authorName = data?.user?.username;
+  console.log(data);
+  console.log(authorName);
   return (
     <Wrapper>
       <CardContainer>
@@ -163,8 +168,12 @@ function Info(props) {
       <CardBody>
         <ReactMarkdown>{body}</ReactMarkdown>
       </CardBody>
-      <DeleteButton>Delete</DeleteButton>
-      <EditButton>Edit</EditButton>
+      {author?.username === authorName ? (
+        <div>
+          <DeleteButton>Delete</DeleteButton>
+          <EditButton>Edit</EditButton>
+        </div>
+      ) : null}
     </Wrapper>
   );
 }

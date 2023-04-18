@@ -10,14 +10,14 @@ import EditProfileForm from "../../pages/EditProfileForm";
 import CreateArticle from "../../pages/CreateArticle";
 import { useSelector } from "react-redux";
 import { Alert } from "antd";
-import { selectIsAuth } from "../../store/authSlice";
+// import { selectIsAuth } from "../../store/authSlice";
 
 // import NewArticleForm from "../../pages/NewArticleForm";
 
 function App() {
   const status = useSelector((state) => state.articles.status);
-  const isAuth = useSelector(selectIsAuth);
-  console.log(isAuth);
+  // const isAuth = useSelector(selectIsAuth);
+  // console.log(isAuth);
   const error = status === "rejected" && (
     <Alert
       message="Произошла ошибка. Мы уже работаем над этим."

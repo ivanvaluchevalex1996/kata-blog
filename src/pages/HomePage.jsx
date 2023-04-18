@@ -38,17 +38,17 @@ function HomePage() {
   return (
     <>
       <List>
-        {articles.map((el) => (
+        {articles?.map((el) => (
           <Card
-            key={el.createdAt}
-            username={el.author.username}
-            img={el.author.image}
-            title={el.title}
-            date={el.createdAt}
-            description={el.description}
-            tags={el.tagList}
-            likesNumber={el.favoritesCount}
-            slug={el.slug}
+            key={el?.createdAt}
+            username={el?.author?.username}
+            img={el?.author?.image}
+            title={el?.title}
+            date={el?.createdAt}
+            description={el?.description}
+            tags={el?.tagList}
+            likesNumber={el?.favoritesCount}
+            slug={el?.slug}
             onClick={() => push(`/articles/${el.slug}`)}
           />
         ))}

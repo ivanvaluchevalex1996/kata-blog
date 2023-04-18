@@ -1,11 +1,9 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import styled from "styled-components";
 // import { Link } from "react-router-dom"; // 5 версия
 import { selectIsAuth } from "../store/authSlice";
 import { Redirect } from "react-router-dom";
-import { fetchCreateArticle } from "../store/articlesSlice";
-import { BASE_URL } from "../service/config";
 
 const FormContainer = styled.div`
   position: relative;
@@ -102,13 +100,6 @@ const IncorrectData = styled.div`
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
-  color: rgb(245, 34, 45);
-`;
-const WarningData = styled.div`
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 22px;
   color: rgba(0, 0, 0, 0.75);
 `;
 
@@ -161,8 +152,7 @@ const ButtonDeleteTag = styled.button`
   margin-left: 15px;
 `;
 
-function CreateArticle() {
-  const dispatch = useDispatch();
+function EditArticle() {
   const isAuth = useSelector(selectIsAuth);
   const {
     register,
@@ -195,19 +185,17 @@ function CreateArticle() {
         tags: [...data.tags],
       },
     };
-    // dispatch(fetchCreateArticle(userData)).then((data) => console.log(data));
-    dispatch(fetchCreateArticle(userData));
     console.log(userData);
-
-    // reset();
+    reset();
   };
   // чтобы нельзя было перейти на страницу редактирования если не авторизован
   if (!isAuth && !localStorage.getItem("token")) {
     return <Redirect to="/sign-in" />;
   }
+  console.log(errors);
   return (
     <FormContainer>
-      <FormTitle>Create new article</FormTitle>
+      <FormTitle>Edit article</FormTitle>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <LabelContainer>
           <label htmlFor="username">
@@ -255,7 +243,7 @@ function CreateArticle() {
           </label>
         </LabelContainer>
         <div>
-          <TitleTag>Tags</TitleTag>
+          <TitleTag>Title</TitleTag>
         </div>
         {fields.length > 0 ? (
           fields.map((field, index) => {
@@ -292,9 +280,9 @@ function CreateArticle() {
                 )}
 
                 {index === fields.length - 1 && field.name === "" && (
-                  <WarningData>
+                  <IncorrectData>
                     Перед отправкой формы, убедитесь что поле не пустое.
-                  </WarningData>
+                  </IncorrectData>
                 )}
               </section>
             );
@@ -317,4 +305,4 @@ function CreateArticle() {
   );
 }
 
-export default CreateArticle;
+export default EditArticle;
