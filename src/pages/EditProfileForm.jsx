@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { fetchEditData, selectIsAuth } from "../store/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { edit } from "../store/authSlice";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../service/config";
+import axios from "axios";
 
 const FormContainer = styled.div`
   position: relative;
@@ -92,12 +93,10 @@ const TitleInput = styled.span`
 function EditProfileForm() {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const isAuth = useSelector(selectIsAuth);
   const history = useHistory();
   const {
     register,
     handleSubmit,
-    reset,
     watch,
     formState: { errors, isValid },
   } = useForm({
@@ -115,15 +114,24 @@ function EditProfileForm() {
         image: data.imageUrl,
       },
     };
-    dispatch(fetchEditData(userData));
-    // dispatch(fetchEditData(userData)).then((response) => {
-    //   console.log(response)
-    //   if (response.status === 200) {
-    //     history.push("/");
-    //   }
-    // });
-    history.push("/");
-    console.log(data);
+    const token = localStorage.getItem("token");
+
+    // dispatch(fetchEditData(userData));
+    axios
+      .put(`${BASE_URL}user`, userData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
+        dispatch(edit(response.data));
+        history.push("/");
+      })
+      .catch((error) => {
+        setError(error.response.data.errors);
+        // console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -134,20 +142,6 @@ function EditProfileForm() {
       setError("");
     }
   }, [email]);
-
-  // const checkEmailExists = async (email) => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //   }
-  //   const response = await fetch(`${BASE_URL}user?email=${email}`, {
-  //     headers: {
-  //       Authorization: `Token ${token}`,
-  //     },
-  //   });
-  //   const data = await response.json();
-  //   console.log(data);
-  //   // return data?.users.length > 0;
-  // };
 
   return (
     <FormContainer>
@@ -171,8 +165,12 @@ function EditProfileForm() {
                 },
               })}
             />
-            {errors?.username && (
+            {/* {errors?.username && (
               <IncorrectData>{errors?.username?.message}</IncorrectData>
+            )} */}
+            {error?.username && (
+              // <IncorrectData>{error?.username?.message}</IncorrectData>
+              <IncorrectData>{error?.username}</IncorrectData>
             )}
           </label>
         </LabelContainer>
@@ -180,27 +178,13 @@ function EditProfileForm() {
           <label htmlFor="email">
             <TitleInput>Email address</TitleInput>
             {/* <Input type="email" name="email" {...register("email")} /> */}
-            <Input
-              type="email"
-              name="email"
-              {...register("email")}
-              // {...register("email", {
-              //   required: true,
-              //   pattern: {
-              //     value: /^\S+@\S+$/i,
-              //     message: "Введите корректный email",
-              //   },
-              //   validate: async (value) => {
-              //     const emailExists = await checkEmailExists(value);
-              //     return (
-              //       !emailExists ||
-              //       "Пользователь с таким email уже зарегистрирован"
-              //     );
-              //   },
-              // })}
-            />
-            {errors.email && <p>{errors.email.message}</p>}
-            {error && <IncorrectData>{error}</IncorrectData>}
+            <Input type="email" name="email" {...register("email")} />
+            {/* {errors.email && <p>{errors.email.message}</p>}
+            {error && <IncorrectData>{error}</IncorrectData>} */}
+            {error?.email && (
+              // <IncorrectData>{error?.username?.message}</IncorrectData>
+              <IncorrectData>{error?.email}</IncorrectData>
+            )}
           </label>
         </LabelContainer>
         <LabelContainer>

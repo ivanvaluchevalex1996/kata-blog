@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { selectIsAuth } from "../store/authSlice";
 import { Redirect } from "react-router-dom";
 import { fetchCreateArticle } from "../store/articlesSlice";
-import { BASE_URL } from "../service/config";
 
 const FormContainer = styled.div`
   position: relative;
@@ -168,7 +167,6 @@ function CreateArticle() {
     register,
     handleSubmit,
     control,
-    reset,
     // watch,
     formState: { errors, isValid },
   } = useForm({
@@ -177,7 +175,6 @@ function CreateArticle() {
       tags: [],
     },
   });
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tags",
@@ -188,11 +185,11 @@ function CreateArticle() {
 
   const onSubmit = (data) => {
     const userData = {
-      user: {
+      article: {
         title: data.title,
         description: data.description,
-        text: data.textarea,
-        tags: [...data.tags],
+        body: data.textarea,
+        tagList: data.tags.map((el) => el.name),
       },
     };
     // dispatch(fetchCreateArticle(userData)).then((data) => console.log(data));

@@ -133,8 +133,7 @@ function Info(props) {
 
   const data = JSON.parse(localStorage.getItem("data"));
   const authorName = data?.user?.username;
-  console.log(data);
-  console.log(authorName);
+
   return (
     <Wrapper>
       <CardContainer>

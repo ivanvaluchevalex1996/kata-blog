@@ -15,7 +15,7 @@ export const fetchArticles = createAsyncThunk(
         throw new Error("Server Error!");
       }
       const data = await response.json();
-      console.log(data.articles);
+      // console.log(data.articles);
       return data.articles;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -37,35 +37,13 @@ export const fetchCreateArticle = createAsyncThunk(
           },
         }
       );
-      console.log(response.data);
-      console.log(userData);
-      console.log(response);
-      return response;
+
+      return response.data.article;
     } catch (error) {
-      console.log(error.name);
-      console.log(error);
-      // throw error;
+      throw error;
     }
   }
 );
-// export const fetchCreateArticle = createAsyncThunk(
-//   "articles/fetchCreateArticle",
-//   async (userData) => {
-//     const token = localStorage.getItem("token");
-//     const response = await fetch(`${BASE_URL}articles`, {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Token ${token}`,
-//       },
-//       body: JSON.stringify(userData),
-//     });
-//     const data = await response.json();
-
-//     console.log(data);
-//     console.log(response);
-//     return data;
-//   }
-// );
 
 const articlesSlice = createSlice({
   name: "articles",
