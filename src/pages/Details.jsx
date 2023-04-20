@@ -9,10 +9,11 @@ function Details() {
   const { push } = useHistory();
 
   const { slug } = useParams();
+  // console.log(slug);
   useEffect(() => {
     axios.get(getArticle(slug)).then(({ data }) => setArticle(data.article));
   }, [slug]);
-  //   console.log(article);
+  // console.log(article);
   return <div>{article && <Info push={push} {...article} />}</div>;
 }
 

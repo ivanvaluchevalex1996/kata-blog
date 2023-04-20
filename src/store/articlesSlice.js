@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "../service/config";
 import axios from "axios";
 
 export const fetchArticles = createAsyncThunk(
   "articles/fetchArticles",
   // async function (_, { rejectWithValue }) {
-  async function (offset, { rejectWithValue }) {
+  async function (offset) {
     try {
       const response = await fetch(
         `${BASE_URL}articles?limit=5&offset=${offset}`
@@ -18,7 +18,7 @@ export const fetchArticles = createAsyncThunk(
       // console.log(data.articles);
       return data.articles;
     } catch (error) {
-      return rejectWithValue(error.message);
+      throw error;
     }
   }
 );
@@ -44,6 +44,72 @@ export const fetchCreateArticle = createAsyncThunk(
     }
   }
 );
+export const fetchDeleteArticle = createAsyncThunk(
+  "articles/fetchDeleteArticle",
+  async (slug) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.delete(
+        `https://blog.kata.academy/api/articles/${slug}`,
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      // return response.data.article;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+export const fetchEditArticle = createAsyncThunk(
+  "articles/fetchEditArticle",
+  async (payload) => {
+    const { slug, userData } = payload;
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.put(
+        `https://blog.kata.academy/api/articles/${slug}`,
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+export const fetchLikeArticle = createAsyncThunk(
+  "articles/fetchCreateArticle",
+  async (slug) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.post(
+        `https://blog.kata.academy/api/articles/${slug}/favorite`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+);
 
 const articlesSlice = createSlice({
   name: "articles",
@@ -52,7 +118,8 @@ const articlesSlice = createSlice({
     status: null,
     error: null,
     page: 1,
-    totalResults: 1,
+    like: 0,
+    // totalResults: 1,
   },
 
   reducers: {
@@ -62,6 +129,12 @@ const articlesSlice = createSlice({
     },
     addArticlesArr(state, action) {
       state.articles = state.articles.concat(action.payload);
+    },
+    likePlus(state) {
+      state.like += 1;
+    },
+    likeMinus(state) {
+      state.like -= 1;
     },
   },
   extraReducers: {
@@ -89,6 +162,31 @@ const articlesSlice = createSlice({
       state.status = "rejected";
       state.error = action.payload;
     },
+    [fetchEditArticle.pending]: (state) => {
+      state.status = "loading";
+      state.error = null;
+    },
+    [fetchEditArticle.fulfilled]: (state, action) => {
+      state.status = "resolved";
+      state.articles.push(action.payload.article);
+    },
+    [fetchEditArticle.rejected]: (state, action) => {
+      state.status = "rejected";
+      state.error = action.payload;
+    },
+    // [fetchLikeArticle.pending]: (state) => {
+    //   state.status = "loading";
+    //   state.error = null;
+    // },
+    // [fetchLikeArticle.fulfilled]: (state, action) => {
+    //   state.status = "resolved";
+    //   state.articles.push(action.payload.article);
+    //   console.log(action.payload);
+    // },
+    // [fetchLikeArticle.rejected]: (state, action) => {
+    //   state.status = "rejected";
+    //   state.error = action.payload;
+    // },
   },
 });
 

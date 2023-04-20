@@ -1,9 +1,11 @@
 import { useSelector } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import styled from "styled-components";
-// import { Link } from "react-router-dom"; // 5 версия
 import { selectIsAuth } from "../store/authSlice";
 import { Redirect } from "react-router-dom";
+import { fetchEditArticle } from "../store/articlesSlice";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const FormContainer = styled.div`
   position: relative;
@@ -154,6 +156,9 @@ const ButtonDeleteTag = styled.button`
 
 function EditArticle() {
   const isAuth = useSelector(selectIsAuth);
+  const dispatch = useDispatch();
+  const history = useHistory();
+
   const {
     register,
     handleSubmit,
@@ -177,16 +182,22 @@ function EditArticle() {
   });
 
   const onSubmit = (data) => {
-    const userData = {
-      user: {
-        title: data.title,
-        description: data.description,
-        text: data.textarea,
-        tags: [...data.tags],
+    const slug = localStorage.getItem("slug");
+
+    const payload = {
+      slug: slug,
+      userData: {
+        article: {
+          title: data.title,
+          description: data.description,
+          body: data.textarea,
+          // tagList: data.tags.map((el) => el.name),
+        },
       },
     };
-    console.log(userData);
-    reset();
+
+    dispatch(fetchEditArticle(payload));
+    history.push(`/`);
   };
   // чтобы нельзя было перейти на страницу редактирования если не авторизован
   if (!isAuth && !localStorage.getItem("token")) {
@@ -254,7 +265,7 @@ function EditArticle() {
                     type="text"
                     name={`tags.${index}.name`}
                     {...register(`tags.${index}.name`, {
-                      required: "Поле обязательно к заполнению ",
+                      // required: "Поле обязательно к заполнению ",
                     })}
                   />
                 </label>

@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import styled from "styled-components";
-// import { Link } from "react-router-dom"; // 5 версия
+import { useHistory } from "react-router-dom";
 import { selectIsAuth } from "../store/authSlice";
 import { Redirect } from "react-router-dom";
 import { fetchCreateArticle } from "../store/articlesSlice";
@@ -161,13 +161,14 @@ const ButtonDeleteTag = styled.button`
 `;
 
 function CreateArticle() {
+  const history = useHistory();
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
+
   const {
     register,
     handleSubmit,
     control,
-    // watch,
     formState: { errors, isValid },
   } = useForm({
     mode: "onSubmit",
@@ -192,16 +193,19 @@ function CreateArticle() {
         tagList: data.tags.map((el) => el.name),
       },
     };
-    // dispatch(fetchCreateArticle(userData)).then((data) => console.log(data));
-    dispatch(fetchCreateArticle(userData));
-    console.log(userData);
-
-    // reset();
+    // сделано для того чтобы после создания статьи переходить сразу на нее
+    dispatch(fetchCreateArticle(userData)).then((res) => {
+      localStorage.setItem("slug", res.payload.slug);
+      history.push(`/articles/${res.payload.slug}`);
+      localStorage.removeItem("slug");
+    });
   };
+
   // чтобы нельзя было перейти на страницу редактирования если не авторизован
   if (!isAuth && !localStorage.getItem("token")) {
     return <Redirect to="/sign-in" />;
   }
+
   return (
     <FormContainer>
       <FormTitle>Create new article</FormTitle>

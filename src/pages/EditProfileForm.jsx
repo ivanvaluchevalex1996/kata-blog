@@ -155,21 +155,9 @@ function EditProfileForm() {
               name="username"
               {...register("username", {
                 required: "Поле обязательно к заполнению ",
-                minLength: {
-                  value: 3,
-                  message: "Слишком короткое имя",
-                },
-                maxLength: {
-                  value: 20,
-                  message: "Слишком длинное имя",
-                },
               })}
             />
-            {/* {errors?.username && (
-              <IncorrectData>{errors?.username?.message}</IncorrectData>
-            )} */}
             {error?.username && (
-              // <IncorrectData>{error?.username?.message}</IncorrectData>
               <IncorrectData>{error?.username}</IncorrectData>
             )}
           </label>
@@ -177,14 +165,8 @@ function EditProfileForm() {
         <LabelContainer>
           <label htmlFor="email">
             <TitleInput>Email address</TitleInput>
-            {/* <Input type="email" name="email" {...register("email")} /> */}
             <Input type="email" name="email" {...register("email")} />
-            {/* {errors.email && <p>{errors.email.message}</p>}
-            {error && <IncorrectData>{error}</IncorrectData>} */}
-            {error?.email && (
-              // <IncorrectData>{error?.username?.message}</IncorrectData>
-              <IncorrectData>{error?.email}</IncorrectData>
-            )}
+            {error?.email && <IncorrectData>{error?.email}</IncorrectData>}
           </label>
         </LabelContainer>
         <LabelContainer>

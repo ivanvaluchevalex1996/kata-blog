@@ -1,8 +1,13 @@
 import styled from "styled-components";
 import trimText from "../../utils/truncate";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
+import { useDispatch } from "react-redux";
+import { fetchDeleteArticle } from "../../store/articlesSlice";
+import { message, Popconfirm } from "antd";
+import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom"; // 5 версия
 
 const Wrapper = styled.article`
   background-color: #ffffff;
@@ -68,6 +73,7 @@ const CardAuthor = styled.span`
   line-height: 28px;
   color: rgba(0, 0, 0, 0.85);
   margin: 0px;
+  font-weight: 600;
 `;
 const CardDate = styled.span`
   font-size: 12px;
@@ -76,7 +82,7 @@ const CardDate = styled.span`
   margin: 0px;
 `;
 
-const LikeContainer = styled.div`
+const TitleContainer = styled.div`
   dispaly: flex;
 `;
 const LikeCount = styled.span`
@@ -102,7 +108,7 @@ const DeleteButton = styled.button`
     background: rgb(245, 34, 45);
   }
 `;
-const EditButton = styled.button`
+const EditButton = styled(Link)`
   text-decoration: none;
   background: unset;
   cursor: pointer;
@@ -129,23 +135,37 @@ function Info(props) {
     favoritesCount,
     tagList,
     title,
+    slug,
+    favorited,
   } = props;
-
+  console.log(props);
+  const dispatch = useDispatch();
   const data = JSON.parse(localStorage.getItem("data"));
   const authorName = data?.user?.username;
+  const history = useHistory();
+  console.log(slug);
+  localStorage.setItem("slug", slug);
+  const confirm = (e) => {
+    console.log(e);
+    dispatch(fetchDeleteArticle(slug));
+    history.push("/");
+  };
+  const cancel = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
 
   return (
     <Wrapper>
       <CardContainer>
         <CardLeft>
-          <LikeContainer>
+          <TitleContainer>
             <CardTitle>{title.length > 30 ? trimText(title) : title}</CardTitle>
-            {/* <CardTitle>{title.length}</CardTitle> */}
-            <IoHeartOutline />
+            {favorited ? <IoHeartSharp /> : <IoHeartOutline />}
             <LikeCount>{favoritesCount}</LikeCount>
-          </LikeContainer>
+          </TitleContainer>
           <CardTags>
-            {tagList.map((el, i) => (
+            {tagList?.map((el, i) => (
               <Tag key={i + el}>{el}</Tag>
             ))}
           </CardTags>
@@ -169,8 +189,21 @@ function Info(props) {
       </CardBody>
       {author?.username === authorName ? (
         <div>
-          <DeleteButton>Delete</DeleteButton>
-          <EditButton>Edit</EditButton>
+          <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={confirm}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+            placement="right"
+          >
+            <DeleteButton>Delete</DeleteButton>
+          </Popconfirm>
+          {/* <DeleteButton onClick={() => dispatch(fetchDeleteArticle(slug))}>
+            Delete
+          </DeleteButton> */}
+          <EditButton to={`/articles/${slug}/edit`}>Edit</EditButton>
         </div>
       ) : null}
     </Wrapper>

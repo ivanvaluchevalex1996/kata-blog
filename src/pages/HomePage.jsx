@@ -19,12 +19,9 @@ function HomePage() {
   useEffect(() => {
     // получение количетсва статей
     axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
-    // получение статей
     dispatch(fetchArticles((pageArticles - 1) * 5));
-    // получение токена
-    // fetchToken();
-  }, [pageArticles, dispatch]);
-
+  }, [pageArticles, dispatch, results]);
+  console.log(articles);
   const articlesPagination = (
     <Pagination
       current={pageArticles}
@@ -38,9 +35,9 @@ function HomePage() {
   return (
     <>
       <List>
-        {articles?.map((el) => (
+        {articles?.map((el, i) => (
           <Card
-            key={el?.createdAt}
+            key={el?.createdAt + i}
             username={el?.author?.username}
             img={el?.author?.image}
             title={el?.title}
@@ -48,6 +45,7 @@ function HomePage() {
             description={el?.description}
             tags={el?.tagList}
             likesNumber={el?.favoritesCount}
+            favorited={el?.favorited}
             slug={el?.slug}
             onClick={() => push(`/articles/${el.slug}`)}
           />

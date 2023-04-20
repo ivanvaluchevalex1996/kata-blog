@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { Link } from "react-router-dom"; // 5 версия
 // import { fetchRegister, selectIsAuth } from "../store/authSlice";
-import { fetchRegister, selectIsAuth, login } from "../store/authSlice";
+import { selectIsAuth, login } from "../store/authSlice";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../service/config";
@@ -114,14 +114,12 @@ function RegistrationForm() {
   const {
     register,
     handleSubmit,
-    // reset,
     watch,
     formState: { errors, isValid },
   } = useForm({
     mode: "onBlur",
   });
 
-  const email = watch("email");
   const password = watch("password");
   const repeatPassword = watch("repeatPassword");
   const checked = watch("checkbox");
@@ -134,17 +132,14 @@ function RegistrationForm() {
         password: data.password,
       },
     };
-    // console.log(userData);
     axios
       .post(`${BASE_URL}users`, userData)
       .then((response) => {
-        // console.log(response);
         dispatch(login(response.data));
       })
       .catch((error) => {
         setError(error.response.data.errors);
       });
-    // dispatch(fetchRegister(userData));
   };
 
   useEffect(() => {

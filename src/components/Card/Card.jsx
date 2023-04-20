@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { format } from "date-fns";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import trimText from "../../utils/truncate";
+import { fetchLikeArticle } from "../../store/articlesSlice";
+import { useDispatch } from "react-redux";
 
 const Wrapper = styled.article`
   background-color: #ffffff;
@@ -76,9 +78,10 @@ const CardDate = styled.span`
   text-align: end;
 `;
 
-const LikeContainer = styled.div`
+const TitleContainer = styled.div`
   dispaly: flex;
 `;
+const LikeContainer = styled.span``;
 const LikeCount = styled.span`
   font-size: 12px;
   line-height: 22px;
@@ -95,21 +98,25 @@ function Card({
   description,
   tags,
   likesNumber,
+  favorited,
   onClick,
+  slug,
 }) {
+  const dispatch = useDispatch();
   return (
     <Wrapper>
       <CardLeft>
-        <LikeContainer>
+        <TitleContainer>
           <CardTitle onClick={onClick}>
             {title.length > 30 ? trimText(title) : title}
           </CardTitle>
-          {/* <CardTitle>{title.length}</CardTitle> */}
-          <IoHeartOutline />
-          <LikeCount>{likesNumber}</LikeCount>
-        </LikeContainer>
+          <LikeContainer onClick={() => dispatch(fetchLikeArticle(slug))}>
+            {favorited ? <IoHeartSharp /> : <IoHeartOutline />}
+            <LikeCount>{likesNumber}</LikeCount>
+          </LikeContainer>
+        </TitleContainer>
         <CardTags>
-          {tags.map((el, i) => (
+          {tags?.map((el, i) => (
             <Tag key={i + el}>{el}</Tag>
           ))}
         </CardTags>

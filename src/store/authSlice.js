@@ -9,25 +9,20 @@ export const fetchAuth = createAsyncThunk(
     try {
       const response = await axios.post(`${BASE_URL}users/login`, userData);
       localStorage.setItem("token", response.data.user.token);
-      console.log(response.data);
       localStorage.setItem("data", JSON.stringify(response.data));
-      console.log(response);
       return response.data;
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }
 );
 export const fetchRegister = createAsyncThunk(
   "auth/fetchRegister",
-  async (userData, { rejectWithValue }) => {
+  async (userData) => {
     try {
       const response = await axios.post(`${BASE_URL}users`, userData);
       localStorage.setItem("token", response.data.user.token);
-      console.log(response.data);
       localStorage.setItem("data", JSON.stringify(response.data));
-      console.log(response);
       return response.data;
     } catch (e) {
       throw new Error("request error");
@@ -38,28 +33,30 @@ export const fetchRegister = createAsyncThunk(
 export const fetchEditData = createAsyncThunk(
   "auth/fetchRegister",
   async (userData) => {
-    const token = localStorage.getItem("token");
-    const response = await fetch(`${BASE_URL}user`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${token}`,
-      },
-      body: JSON.stringify(userData),
-    });
-    const data = await response.json();
-    // в этом запросе при перезагрузке страницы токен обновлялся поэтому выбрасывало из учетки
-    // localStorage.setItem("token", JSON.stringify(data.user.token));
-    localStorage.setItem("data", JSON.stringify(data));
-    localStorage.setItem("image", JSON.stringify(data.user.image));
-    return data;
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${BASE_URL}user`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+      // в этом запросе при перезагрузке страницы токен обновлялся поэтому выбрасывало из учетки
+      localStorage.setItem("data", JSON.stringify(data));
+      localStorage.setItem("image", JSON.stringify(data.user.image));
+      return data;
+    } catch (e) {
+      throw e;
+    }
   }
 );
 
 // при перезагрузке страницы, чтобы не выбрасывало
 export const initAuth = createAsyncThunk("auth/initAuth", async () => {
   const token = localStorage.getItem("token");
-  // console.log(token);
   if (token) {
     const response = await axios.get(`${BASE_URL}user`, {
       headers: {
@@ -91,13 +88,11 @@ const authSlice = createSlice({
       state.data = action.payload;
       localStorage.setItem("data", JSON.stringify(action.payload));
       localStorage.setItem("token", action.payload.user.token);
-      console.log(action.payload);
     },
     edit: (state, action) => {
       state.data = action.payload;
       localStorage.setItem("data", JSON.stringify(action.payload));
       localStorage.setItem("image", JSON.stringify(action.payload.user.image));
-      console.log(action.payload);
     },
   },
   extraReducers: {
@@ -109,7 +104,7 @@ const authSlice = createSlice({
       state.status = "resolved";
       state.data = action.payload;
     },
-    [fetchAuth.rejected]: (state, action) => {
+    [fetchAuth.rejected]: (state) => {
       state.status = "rejected";
       state.data = null;
     },
@@ -134,7 +129,7 @@ const authSlice = createSlice({
       state.status = "resolved";
       state.data = action.payload;
     },
-    [fetchEditData.rejected]: (state, action) => {
+    [fetchEditData.rejected]: (state) => {
       state.status = "rejected";
       state.data = null;
     },
@@ -142,7 +137,7 @@ const authSlice = createSlice({
       state.status = "resolved";
       state.data = action.payload;
     },
-    [initAuth.rejected]: (state, action) => {
+    [initAuth.rejected]: (state) => {
       state.status = "rejected";
       state.data = null;
     },

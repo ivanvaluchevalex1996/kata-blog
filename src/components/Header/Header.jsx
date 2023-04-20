@@ -137,7 +137,6 @@ function Header() {
         <LoginContainer>
           {isAuth ? (
             <>
-              {/* <ButtonCreateArticle to={"/new-article"}> */}
               <ButtonCreateArticle to={"/new-article"}>
                 Create Article
               </ButtonCreateArticle>
@@ -149,7 +148,6 @@ function Header() {
                     : "https://static.productionready.io/images/smiley-cyrus.jpg"
                 }
               />
-              {/* <ImageUser src="https://static.productionready.io/images/smiley-cyrus.jpg" /> */}
               <ButtonLogOut onClick={onClickLogout}>Log Out</ButtonLogOut>
             </>
           ) : (
