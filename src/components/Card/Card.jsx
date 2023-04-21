@@ -3,7 +3,9 @@ import { format } from "date-fns";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import trimText from "../../utils/truncate";
 import { fetchLikeArticle } from "../../store/articlesSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsAuth } from "../../store/authSlice";
+import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.article`
   background-color: #ffffff;
@@ -103,6 +105,18 @@ function Card({
   slug,
 }) {
   const dispatch = useDispatch();
+  // const likes = useSelector((state) => state.articles.likes);
+  const isAuth = useSelector(selectIsAuth);
+  const history = useHistory();
+  const handleLikeClick = () => {
+    // проверяем, что пользователь авторизован
+    if (isAuth) {
+      dispatch(fetchLikeArticle(slug));
+    } else {
+      history.push("/");
+    }
+  };
+
   return (
     <Wrapper>
       <CardLeft>
@@ -110,7 +124,7 @@ function Card({
           <CardTitle onClick={onClick}>
             {title.length > 30 ? trimText(title) : title}
           </CardTitle>
-          <LikeContainer onClick={() => dispatch(fetchLikeArticle(slug))}>
+          <LikeContainer onClick={handleLikeClick}>
             {favorited ? <IoHeartSharp /> : <IoHeartOutline />}
             <LikeCount>{likesNumber}</LikeCount>
           </LikeContainer>

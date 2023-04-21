@@ -5,7 +5,6 @@ import axios from "axios";
 
 export const fetchArticles = createAsyncThunk(
   "articles/fetchArticles",
-  // async function (_, { rejectWithValue }) {
   async function (offset) {
     try {
       const response = await fetch(
@@ -89,12 +88,12 @@ export const fetchEditArticle = createAsyncThunk(
   }
 );
 export const fetchLikeArticle = createAsyncThunk(
-  "articles/fetchCreateArticle",
+  "articles/fetchLikeArticle",
   async (slug) => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
-        `https://blog.kata.academy/api/articles/${slug}/favorite`,
+        `${BASE_URL}articles/${slug}/favorite`,
         {},
         {
           headers: {
@@ -104,6 +103,7 @@ export const fetchLikeArticle = createAsyncThunk(
         }
       );
       console.log(response);
+      return response.data.article;
     } catch (error) {
       console.log(error);
       throw error;
@@ -118,8 +118,7 @@ const articlesSlice = createSlice({
     status: null,
     error: null,
     page: 1,
-    like: 0,
-    // totalResults: 1,
+    like: false,
   },
 
   reducers: {
@@ -129,12 +128,6 @@ const articlesSlice = createSlice({
     },
     addArticlesArr(state, action) {
       state.articles = state.articles.concat(action.payload);
-    },
-    likePlus(state) {
-      state.like += 1;
-    },
-    likeMinus(state) {
-      state.like -= 1;
     },
   },
   extraReducers: {
@@ -174,15 +167,15 @@ const articlesSlice = createSlice({
       state.status = "rejected";
       state.error = action.payload;
     },
-    // [fetchLikeArticle.pending]: (state) => {
-    //   state.status = "loading";
-    //   state.error = null;
-    // },
-    // [fetchLikeArticle.fulfilled]: (state, action) => {
-    //   state.status = "resolved";
-    //   state.articles.push(action.payload.article);
-    //   console.log(action.payload);
-    // },
+    [fetchLikeArticle.fulfilled]: (state, action) => {
+      state.status = "resolved";
+      state.articles = state.articles.map((article) =>
+        article.slug === action.payload.slug ? action.payload : article
+      );
+      // state.likes = true;
+      console.log(action.payload);
+      console.log(action);
+    },
     // [fetchLikeArticle.rejected]: (state, action) => {
     //   state.status = "rejected";
     //   state.error = action.payload;
