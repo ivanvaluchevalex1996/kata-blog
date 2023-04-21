@@ -117,11 +117,16 @@ const EditButton = styled(Link)`
   border: 1px solid rgb(82, 196, 26);
   font-size: 14px;
   line-height: 22px;
-  padding: 6px 10px;
+  padding: 9px 18px;
+  margin-left: 10px;
   &:hover {
     color: white;
     background: rgb(82, 196, 26);
   }
+`;
+
+const ButtonContainer = styled.div`
+  text-align: end;
 `;
 
 const CardBody = styled.div``;
@@ -161,7 +166,11 @@ function Info(props) {
         <CardLeft>
           <TitleContainer>
             <CardTitle>{title.length > 30 ? trimText(title) : title}</CardTitle>
-            {favorited ? <IoHeartSharp /> : <IoHeartOutline />}
+            {localStorage.getItem(`like_${slug}`) ? (
+              <IoHeartSharp />
+            ) : (
+              <IoHeartOutline />
+            )}
             <LikeCount>{favoritesCount}</LikeCount>
           </TitleContainer>
           <CardTags>
@@ -188,10 +197,10 @@ function Info(props) {
         <ReactMarkdown>{body}</ReactMarkdown>
       </CardBody>
       {author?.username === authorName ? (
-        <div>
+        <ButtonContainer>
           <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this task?"
+            title="Delete Article"
+            description="Are you sure to delete this article?"
             onConfirm={confirm}
             onCancel={cancel}
             okText="Yes"
@@ -200,11 +209,8 @@ function Info(props) {
           >
             <DeleteButton>Delete</DeleteButton>
           </Popconfirm>
-          {/* <DeleteButton onClick={() => dispatch(fetchDeleteArticle(slug))}>
-            Delete
-          </DeleteButton> */}
           <EditButton to={`/articles/${slug}/edit`}>Edit</EditButton>
-        </div>
+        </ButtonContainer>
       ) : null}
     </Wrapper>
   );

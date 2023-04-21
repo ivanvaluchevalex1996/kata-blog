@@ -118,7 +118,6 @@ export const fetchLikeDelete = createAsyncThunk(
     try {
       const response = await axios.delete(
         `https://blog.kata.academy/api/articles/${slug}/favorite`,
-
         {
           headers: {
             "Content-Type": "application/json",
@@ -195,18 +194,14 @@ const articlesSlice = createSlice({
       state.articles = state.articles.map((article) =>
         article.slug === action.payload.slug ? action.payload : article
       );
-      // state.likes = true;
-      console.log(action.payload);
-      console.log(action);
+      localStorage.setItem(`like_${action.payload.slug}`, true); // сохраняем состояние лайка
     },
     [fetchLikeDelete.fulfilled]: (state, action) => {
       state.status = "resolved";
       state.articles = state.articles.map((article) =>
         article.slug === action.payload.slug ? action.payload : article
       );
-      // state.likes = true;
-      console.log(action.payload);
-      console.log(action);
+      localStorage.removeItem(`like_${action.payload.slug}`, false);
     },
   },
 });
