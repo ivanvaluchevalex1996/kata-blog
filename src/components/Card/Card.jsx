@@ -6,7 +6,7 @@ import { fetchLikeArticle, fetchLikeDelete } from "../../store/articlesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsAuth } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
-
+import { useEffect, useState } from "react";
 const Wrapper = styled.article`
   background-color: #ffffff;
   overflow: hidden;
@@ -83,7 +83,9 @@ const CardDate = styled.span`
 const TitleContainer = styled.div`
   dispaly: flex;
 `;
-const LikeContainer = styled.span``;
+const LikeContainer = styled.span`
+  cursor: pointer;
+`;
 const LikeCount = styled.span`
   font-size: 12px;
   line-height: 22px;
@@ -105,26 +107,24 @@ function Card({
   slug,
 }) {
   const dispatch = useDispatch();
-  // const likes = useSelector((state) => state.articles.likes);
   const isAuth = useSelector(selectIsAuth);
   const history = useHistory();
   const handleLikeClick = () => {
     // проверяем, что пользователь авторизован
     if (isAuth) {
+      console.log(favorited);
       if (!favorited) {
         dispatch(fetchLikeArticle(slug));
         localStorage.setItem(`like_${slug}`, true);
       }
       if (favorited) {
         dispatch(fetchLikeDelete(slug));
-        // localStorage.setItem(`like_${slug}`, false);
         localStorage.removeItem(`like_${slug}`);
       }
     } else {
       history.push("/");
     }
   };
-  // console.log(favorited);
   return (
     <Wrapper>
       <CardLeft>

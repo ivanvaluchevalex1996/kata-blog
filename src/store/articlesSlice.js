@@ -14,7 +14,6 @@ export const fetchArticles = createAsyncThunk(
         throw new Error("Server Error!");
       }
       const data = await response.json();
-      // console.log(data.articles);
       return data.articles;
     } catch (error) {
       throw error;
@@ -58,8 +57,6 @@ export const fetchDeleteArticle = createAsyncThunk(
           },
         }
       );
-      console.log(response);
-      // return response.data.article;
     } catch (error) {
       throw error;
     }
@@ -102,10 +99,8 @@ export const fetchLikeArticle = createAsyncThunk(
           },
         }
       );
-      console.log(response);
       return response.data.article;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -125,7 +120,6 @@ export const fetchLikeDelete = createAsyncThunk(
           },
         }
       );
-      console.log(response);
       return response.data.article;
     } catch (error) {
       throw error;

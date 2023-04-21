@@ -92,7 +92,6 @@ const SubmitButton = styled.input.attrs({ type: "submit" })`
   &:disabled {
     background: rgba(24, 144, 255, 0.5);
     border-color: rgba(24, 144, 255, 0.5);
-    // cursor: not-allowed;
   }
 `;
 

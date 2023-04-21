@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { ALL_ARTICLES } from "../service/config";
 import { Pagination } from "antd";
 import { changePage } from "../store/articlesSlice";
-// import { fetchToken } from "../service/config";
 
 function HomePage() {
   const articles = useSelector((state) => state.articles.articles);

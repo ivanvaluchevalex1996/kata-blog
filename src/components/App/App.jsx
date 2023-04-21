@@ -12,11 +12,8 @@ import EditArticle from "../../pages/EditArticle";
 import { useSelector } from "react-redux";
 import { Alert } from "antd";
 
-// import NewArticleForm from "../../pages/NewArticleForm";
-
 function App() {
   const status = useSelector((state) => state.articles.status);
-  // console.log(isAuth);
   const error = status === "rejected" && (
     <Alert
       message="Произошла ошибка. Мы уже работаем над этим."

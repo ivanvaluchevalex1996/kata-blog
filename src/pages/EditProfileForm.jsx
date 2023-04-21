@@ -116,7 +116,6 @@ function EditProfileForm() {
     };
     const token = localStorage.getItem("token");
 
-    // dispatch(fetchEditData(userData));
     axios
       .put(`${BASE_URL}user`, userData, {
         headers: {
@@ -130,7 +129,6 @@ function EditProfileForm() {
       })
       .catch((error) => {
         setError(error.response.data.errors);
-        // console.log(error);
       });
   };
 

@@ -93,7 +93,6 @@ const SubmitButton = styled.input.attrs({ type: "submit" })`
   &:disabled {
     background: rgba(24, 144, 255, 0.5);
     border-color: rgba(24, 144, 255, 0.5);
-    // cursor: not-allowed;
   }
 `;
 
@@ -163,8 +162,7 @@ function EditArticle() {
     register,
     handleSubmit,
     control,
-    reset,
-    // watch,
+
     formState: { errors, isValid },
   } = useForm({
     mode: "onSubmit",
@@ -203,7 +201,6 @@ function EditArticle() {
   if (!isAuth && !localStorage.getItem("token")) {
     return <Redirect to="/sign-in" />;
   }
-  console.log(errors);
   return (
     <FormContainer>
       <FormTitle>Edit article</FormTitle>
@@ -264,9 +261,7 @@ function EditArticle() {
                   <TagInput
                     type="text"
                     name={`tags.${index}.name`}
-                    {...register(`tags.${index}.name`, {
-                      // required: "Поле обязательно к заполнению ",
-                    })}
+                    {...register(`tags.${index}.name`, {})}
                   />
                 </label>
                 <ButtonDeleteTag

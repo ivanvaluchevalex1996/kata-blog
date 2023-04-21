@@ -112,7 +112,6 @@ function RegistrationForm() {
         password: data.password,
       },
     };
-    // console.log(data);
     dispatch(fetchAuth(userData)).then((result) => {
       if (!result.payload) {
         setErrorPass("Неверный пароль");
