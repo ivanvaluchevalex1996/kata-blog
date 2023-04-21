@@ -125,9 +125,10 @@ function Header() {
       dispatch(logout());
       // для того чтобы по выходу из учетки перебрасывало на главную
       history.push("/");
-      localStorage.removeItem("token");
-      localStorage.removeItem("data");
-      localStorage.removeItem("image");
+      // localStorage.removeItem("token");
+      // localStorage.removeItem("data");
+      // localStorage.removeItem("image");
+      localStorage.clear();
     }
   };
   return (
