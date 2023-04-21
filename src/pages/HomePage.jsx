@@ -21,7 +21,6 @@ function HomePage() {
     axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
     dispatch(fetchArticles((pageArticles - 1) * 5));
   }, [pageArticles, dispatch, results]);
-  console.log(articles);
   const articlesPagination = (
     <Pagination
       current={pageArticles}

@@ -11,13 +11,11 @@ import CreateArticle from "../../pages/CreateArticle";
 import EditArticle from "../../pages/EditArticle";
 import { useSelector } from "react-redux";
 import { Alert } from "antd";
-// import { selectIsAuth } from "../../store/authSlice";
 
 // import NewArticleForm from "../../pages/NewArticleForm";
 
 function App() {
   const status = useSelector((state) => state.articles.status);
-  // const isAuth = useSelector(selectIsAuth);
   // console.log(isAuth);
   const error = status === "rejected" && (
     <Alert

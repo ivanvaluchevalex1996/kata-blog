@@ -111,6 +111,29 @@ export const fetchLikeArticle = createAsyncThunk(
   }
 );
 
+export const fetchLikeDelete = createAsyncThunk(
+  "articles/fetchLikeDelete",
+  async (slug) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.delete(
+        `https://blog.kata.academy/api/articles/${slug}/favorite`,
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      return response.data.article;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 const articlesSlice = createSlice({
   name: "articles",
   initialState: {
@@ -176,10 +199,15 @@ const articlesSlice = createSlice({
       console.log(action.payload);
       console.log(action);
     },
-    // [fetchLikeArticle.rejected]: (state, action) => {
-    //   state.status = "rejected";
-    //   state.error = action.payload;
-    // },
+    [fetchLikeDelete.fulfilled]: (state, action) => {
+      state.status = "resolved";
+      state.articles = state.articles.map((article) =>
+        article.slug === action.payload.slug ? action.payload : article
+      );
+      // state.likes = true;
+      console.log(action.payload);
+      console.log(action);
+    },
   },
 });
 

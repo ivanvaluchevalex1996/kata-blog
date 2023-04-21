@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { format } from "date-fns";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import trimText from "../../utils/truncate";
-import { fetchLikeArticle } from "../../store/articlesSlice";
+import { fetchLikeArticle, fetchLikeDelete } from "../../store/articlesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsAuth } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
@@ -111,12 +111,17 @@ function Card({
   const handleLikeClick = () => {
     // проверяем, что пользователь авторизован
     if (isAuth) {
-      dispatch(fetchLikeArticle(slug));
+      if (!favorited) {
+        dispatch(fetchLikeArticle(slug));
+      }
+      if (favorited) {
+        dispatch(fetchLikeDelete(slug));
+      }
     } else {
       history.push("/");
     }
   };
-
+  // console.log(favorited);
   return (
     <Wrapper>
       <CardLeft>
