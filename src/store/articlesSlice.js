@@ -47,7 +47,7 @@ export const fetchDeleteArticle = createAsyncThunk(
   async (slug) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `https://blog.kata.academy/api/articles/${slug}`,
 
         {
@@ -131,10 +131,10 @@ const articlesSlice = createSlice({
   name: "articles",
   initialState: {
     articles: [],
+    article: null,
     status: null,
     error: null,
     page: 1,
-    like: false,
   },
 
   reducers: {
@@ -144,6 +144,9 @@ const articlesSlice = createSlice({
     },
     addArticlesArr(state, action) {
       state.articles = state.articles.concat(action.payload);
+    },
+    getArticle(state, action) {
+      state.article = action.payload;
     },
   },
   extraReducers: {
@@ -200,5 +203,5 @@ const articlesSlice = createSlice({
   },
 });
 
-export const { changePage } = articlesSlice.actions;
+export const { changePage, getArticle } = articlesSlice.actions;
 export default articlesSlice.reducer;

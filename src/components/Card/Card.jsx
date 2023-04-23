@@ -6,7 +6,6 @@ import { fetchLikeArticle, fetchLikeDelete } from "../../store/articlesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsAuth } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
 const Wrapper = styled.article`
   background-color: #ffffff;
   overflow: hidden;
@@ -112,7 +111,6 @@ function Card({
   const handleLikeClick = () => {
     // проверяем, что пользователь авторизован
     if (isAuth) {
-      console.log(favorited);
       if (!favorited) {
         dispatch(fetchLikeArticle(slug));
         localStorage.setItem(`like_${slug}`, true);

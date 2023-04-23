@@ -1,7 +1,7 @@
 import List from "../components/List/List";
 import Card from "../components/Card/Card";
 import { useHistory } from "react-router-dom"; // 5 версия
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { fetchArticles } from "../store/articlesSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,11 +15,21 @@ function HomePage() {
   const dispatch = useDispatch();
   const { push } = useHistory();
   const [results, setResults] = useState(1);
+  // useEffect(() => {
+  //   // получение количетсва статей
+  //   axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
+  //   dispatch(fetchArticles((pageArticles - 1) * 5));
+  // }, [pageArticles, dispatch, results]);
+  const fetchArticleData = useCallback(async () => {
+    const res = await axios.get(ALL_ARTICLES);
+    setResults(res.data.articlesCount);
+    dispatch(fetchArticles((pageArticles - 1) * 5));
+  }, [dispatch, pageArticles]);
+
   useEffect(() => {
     // получение количетсва статей
-    axios.get(ALL_ARTICLES).then((res) => setResults(res.data.articlesCount));
-    dispatch(fetchArticles((pageArticles - 1) * 5));
-  }, [pageArticles, dispatch, results]);
+    fetchArticleData();
+  }, [fetchArticleData]);
   const articlesPagination = (
     <Pagination
       current={pageArticles}
@@ -48,7 +58,7 @@ function HomePage() {
             onClick={() => push(`/articles/${el.slug}`)}
           />
         ))}
-        {articles.length > 0 ? articlesPagination : null}
+        {articles?.length && articlesPagination}
       </List>
     </>
   );

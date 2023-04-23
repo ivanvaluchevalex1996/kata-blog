@@ -24,10 +24,9 @@ function App() {
   return (
     <>
       <Header />
-      {error}
       <Main>
+        {error}
         <Switch>
-          {/* нужно упорядочивать маршруты от конкретных к общим: 1)/dasboard/stats 2)/dashboard  */}
           <Route exact path="/" component={HomePage}>
             <HomePage />
           </Route>
