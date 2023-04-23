@@ -2,7 +2,6 @@ import Header from "../Header/Header";
 import Main from "../Main/Main";
 import { Switch, Route } from "react-router-dom"; // 5 версия
 import HomePage from "../../pages/HomePage";
-import NotFound from "../../pages/NotFound";
 import Details from "../../pages/Details";
 import LoginForm from "../../pages/LoginForm";
 import RegistrationForm from "../../pages/RegistrationForm";
@@ -36,7 +35,6 @@ function App() {
           <Route path="/:sign-in" component={LoginForm} />
           <Route path="/:sign-up" component={RegistrationForm} />
           <Route path="/:profile" component={EditProfileForm} />
-          <Route component={NotFound} />
         </Switch>
       </Main>
     </>

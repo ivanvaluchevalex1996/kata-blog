@@ -58,7 +58,7 @@ function HomePage() {
             onClick={() => push(`/articles/${el.slug}`)}
           />
         ))}
-        {articles?.length && articlesPagination}
+        {articles.length > 0 && articlesPagination}
       </List>
     </>
   );
