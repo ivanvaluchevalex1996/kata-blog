@@ -107,7 +107,7 @@ const WarningData = styled.div`
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
-  color: rgba(0, 0, 0, 0.75);
+  color: rgb(24, 144, 255);
 `;
 
 const LabelContainer = styled.div`
@@ -216,7 +216,7 @@ function CreateArticle() {
               type="text"
               name="title"
               {...register("title", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required",
               })}
             />
             {errors?.title && (
@@ -231,7 +231,7 @@ function CreateArticle() {
               type="text"
               name="description"
               {...register("description", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required ",
               })}
             />
             {errors?.description && (
@@ -246,7 +246,7 @@ function CreateArticle() {
               type="text"
               name="textarea"
               {...register("textarea", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required ",
               })}
             />
             {errors?.textarea && (
@@ -266,7 +266,7 @@ function CreateArticle() {
                     type="text"
                     name={`tags.${index}.name`}
                     {...register(`tags.${index}.name`, {
-                      required: "Поле обязательно к заполнению ",
+                      required: "The field is required ",
                     })}
                   />
                 </label>

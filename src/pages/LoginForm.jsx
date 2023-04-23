@@ -114,7 +114,7 @@ function RegistrationForm() {
     };
     dispatch(fetchAuth(userData)).then((result) => {
       if (!result.payload) {
-        setErrorPass("Неверный пароль");
+        setErrorPass("Incorrect password");
       }
     });
   };
@@ -122,7 +122,7 @@ function RegistrationForm() {
   useEffect(() => {
     // проверяем корректность email и устанавливаем соответствующее значение ошибки
     if (email && !/\S+@\S+\.\S+/.test(email)) {
-      setError("Данные почты некорректны");
+      setError("Email data is incorrect");
     } else {
       setError("");
     }

@@ -135,7 +135,7 @@ function EditProfileForm() {
   useEffect(() => {
     // проверяем корректность email и устанавливаем соответствующее значение ошибки
     if (email && !/\S+@\S+\.\S+/.test(email)) {
-      setError("Данные почты некорректны");
+      setError("Email data is incorrect");
     } else {
       setError("");
     }
@@ -152,7 +152,7 @@ function EditProfileForm() {
               type="text"
               name="username"
               {...register("username", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required ",
               })}
             />
             {error?.username && (
@@ -174,14 +174,14 @@ function EditProfileForm() {
               type="password"
               name="password"
               {...register("password", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required ",
                 minLength: {
                   value: 6,
-                  message: "Слишком короткий пароль",
+                  message: "Too short password",
                 },
                 maxLength: {
                   value: 40,
-                  message: "Слишком длинный пароль",
+                  message: "Too long password",
                 },
               })}
             />
@@ -198,10 +198,10 @@ function EditProfileForm() {
               type="text"
               name="imageUrl"
               {...register("imageUrl", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required ",
                 pattern: {
                   value: /^(ftp|http|https):\/\/[^ "]+$/,
-                  message: "Введите корректную ссылку на изображение",
+                  message: "Enter a valid image link",
                 },
               })}
             />

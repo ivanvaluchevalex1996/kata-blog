@@ -212,7 +212,7 @@ function EditArticle() {
               type="text"
               name="title"
               {...register("title", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required",
               })}
             />
             {errors?.title && (
@@ -227,7 +227,7 @@ function EditArticle() {
               type="text"
               name="description"
               {...register("description", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required",
               })}
             />
             {errors?.description && (
@@ -242,7 +242,7 @@ function EditArticle() {
               type="text"
               name="textarea"
               {...register("textarea", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required",
               })}
             />
             {errors?.textarea && (

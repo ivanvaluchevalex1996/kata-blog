@@ -169,11 +169,11 @@ function RegistrationForm() {
                 required: true,
                 minLength: {
                   value: 6,
-                  message: "Слишком короткий пароль",
+                  message: "Short name",
                 },
                 maxLength: {
                   value: 40,
-                  message: "Слишком длинный пароль",
+                  message: "Long name",
                 },
               })}
             />
@@ -201,14 +201,14 @@ function RegistrationForm() {
               type="password"
               name="password"
               {...register("password", {
-                required: "Поле обязательно к заполнению ",
+                required: "The field is required ",
                 minLength: {
                   value: 6,
-                  message: "Слишком короткий пароль",
+                  message: "Too short password",
                 },
                 maxLength: {
                   value: 40,
-                  message: "Слишком длинный пароль",
+                  message: "Too long password",
                 },
               })}
             />
