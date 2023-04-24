@@ -132,7 +132,7 @@ function Card({
           </CardTitle>
           <LikeContainer onClick={handleLikeClick}>
             {localStorage.getItem(`like_${slug}`) ? (
-              <IoHeartSharp />
+              <IoHeartSharp color="red" />
             ) : (
               <IoHeartOutline />
             )}

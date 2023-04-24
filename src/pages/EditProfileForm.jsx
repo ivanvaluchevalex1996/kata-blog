@@ -91,6 +91,8 @@ const TitleInput = styled.span`
 `;
 
 function EditProfileForm() {
+  const [usernameInput, setUsernameInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
@@ -131,6 +133,21 @@ function EditProfileForm() {
         setError(error.response.data.errors);
       });
   };
+  // запрос для отображения старых данных пользователя при переходе на редактирование
+  useEffect(() => {
+    async function fetchData() {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}user`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      console.log(response);
+      setUsernameInput(response.data.user.username);
+      setEmailInput(response.data.user.email);
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     // проверяем корректность email и устанавливаем соответствующее значение ошибки
@@ -149,11 +166,13 @@ function EditProfileForm() {
           <label htmlFor="username">
             <TitleInput>Username</TitleInput>
             <Input
+              value={usernameInput}
               type="text"
               name="username"
               {...register("username", {
                 required: "The field is required ",
               })}
+              onChange={(event) => setUsernameInput(event.target.value)}
             />
             {error?.username && (
               <IncorrectData>{error?.username}</IncorrectData>
@@ -163,7 +182,13 @@ function EditProfileForm() {
         <LabelContainer>
           <label htmlFor="email">
             <TitleInput>Email address</TitleInput>
-            <Input type="email" name="email" {...register("email")} />
+            <Input
+              value={emailInput}
+              type="email"
+              name="email"
+              {...register("email")}
+              onChange={(event) => setEmailInput(event.target.value)}
+            />
             {error?.email && <IncorrectData>{error?.email}</IncorrectData>}
           </label>
         </LabelContainer>

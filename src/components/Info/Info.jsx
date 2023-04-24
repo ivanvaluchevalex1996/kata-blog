@@ -11,18 +11,26 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom"; // 5 версия
 import { selectIsAuth } from "../../store/authSlice";
 import { fetchLikeArticle, fetchLikeDelete } from "../../store/articlesSlice";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { getArticle } from "../../service/config";
 
 const Wrapper = styled.article`
   background-color: #ffffff;
+  background-color: rgb(255, 255, 255);
   cursor: pointer;
   overflow: hidden;
   margin-top: 20px;
   border-radius: 5px;
   filter: drop-shadow(rgba(0, 0, 0, 0.15) 0px 4px 12px);
   padding: 20px;
+  margin-bottom: 100px;
+
+  ${(props) =>
+    props.height > 600 &&
+    `
+      padding-bottom: 300px;
+    `}
 `;
 
 const CardContainer = styled.div`
@@ -153,6 +161,23 @@ function Info(props) {
     onClick,
   } = props;
 
+  const wrapperRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  // Обновление высоты карточки после рендера и при изменении размеров окна
+  useEffect(() => {
+    function handleResize() {
+      if (wrapperRef.current) {
+        setHeight(wrapperRef.current.offsetHeight);
+      }
+    }
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const data = JSON.parse(localStorage.getItem("data"));
 
   const isAuthor = () => {
@@ -185,7 +210,6 @@ function Info(props) {
         setIsLiked(true);
         localStorage.setItem(`like_${slug}`, true);
         dispatch(fetchLikeArticle(slug)).then((e) => {
-          console.log(e);
           // обновляем состояние только в случае успешного ответа
           setArticle((prevState) => ({
             ...prevState,
@@ -197,7 +221,6 @@ function Info(props) {
         setIsLiked(false);
         localStorage.removeItem(`like_${slug}`);
         dispatch(fetchLikeDelete(slug)).then((e) => {
-          console.log(e);
           // обновляем состояние только в случае успешного ответа
           setArticle((prevState) => ({
             ...prevState,
@@ -218,7 +241,7 @@ function Info(props) {
     localStorage.setItem("slug", slug);
   }, [slug]);
   return (
-    <Wrapper>
+    <Wrapper ref={wrapperRef} height={height}>
       <CardContainer>
         <CardLeft>
           <TitleContainer>
@@ -226,7 +249,7 @@ function Info(props) {
               {title.length > 30 ? trimText(title) : title}
             </CardTitle>
             <LikeContainer onClick={handleLikeClick}>
-              {isLiked ? <IoHeartSharp /> : <IoHeartOutline />}
+              {isLiked ? <IoHeartSharp color="red" /> : <IoHeartOutline />}
               <LikeCount>{article?.favoritesCount}</LikeCount>
             </LikeContainer>
           </TitleContainer>

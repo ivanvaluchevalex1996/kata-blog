@@ -192,6 +192,7 @@ function CreateArticle() {
         tagList: data.tags.map((el) => el.name),
       },
     };
+
     // сделано для того чтобы после создания статьи переходить сразу на нее
     dispatch(fetchCreateArticle(userData)).then((res) => {
       localStorage.setItem("slug", res.payload.slug);
@@ -241,7 +242,7 @@ function CreateArticle() {
         </LabelContainer>
         <LabelContainer>
           <label htmlFor="textarea">
-            <TitleInput>Short description</TitleInput>
+            <TitleInput>Description</TitleInput>
             <TextInput
               type="text"
               name="textarea"

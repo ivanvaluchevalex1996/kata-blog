@@ -135,6 +135,7 @@ const articlesSlice = createSlice({
     status: null,
     error: null,
     page: 1,
+    flag: false,
   },
 
   reducers: {

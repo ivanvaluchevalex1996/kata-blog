@@ -221,7 +221,7 @@ function RegistrationForm() {
           <label htmlFor="repeatPassword">
             <TitleInput>Repeat Password</TitleInput>
             <Input
-              type="repeatPassword"
+              type="password"
               name="repeatPassword"
               {...register("repeatPassword")}
             />

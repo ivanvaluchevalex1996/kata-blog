@@ -7,6 +7,7 @@ const Wrapper = styled.main`
   padding: 10px 0;
   background: rgb(243, 243, 243);
   height: 100vh;
+  overflow-y: scroll;
 `;
 
 function Main({ children }) {

@@ -9,10 +9,11 @@ function Details() {
   const [article, setArticle] = useState(null);
   const { push } = useHistory();
   const { slug } = useParams();
+
   useEffect(() => {
     axios.get(getArticle(slug)).then(({ data }) => setArticle(data.article));
   }, [slug]);
-  console.log(article);
+
   return (
     <div>
       {article ? (

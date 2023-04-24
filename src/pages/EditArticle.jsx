@@ -6,6 +6,9 @@ import { Redirect } from "react-router-dom";
 import { fetchEditArticle } from "../store/articlesSlice";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { BASE_URL } from "../service/config";
+import axios from "axios";
 
 const FormContainer = styled.div`
   position: relative;
@@ -154,6 +157,10 @@ const ButtonDeleteTag = styled.button`
 `;
 
 function EditArticle() {
+  const [titleInput, setTitleInput] = useState("");
+  const [shortInput, setShortInput] = useState("");
+  const [bodyInput, setBodyInput] = useState("");
+  const [tagsInput, setTagsInput] = useState([]);
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -167,7 +174,7 @@ function EditArticle() {
   } = useForm({
     mode: "onSubmit",
     defaultValues: {
-      tags: [],
+      tags: [...tagsInput],
     },
   });
 
@@ -179,6 +186,25 @@ function EditArticle() {
     },
   });
 
+  useEffect(() => {
+    async function fetchData() {
+      const token = localStorage.getItem("token");
+      const slug = localStorage.getItem("slug");
+      const response = await axios.get(`${BASE_URL}articles/${slug}`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      console.log(response);
+
+      setTitleInput(response?.data.article?.title);
+      setShortInput(response?.data.article?.description);
+      setBodyInput(response?.data.article?.body);
+      setTagsInput(response?.data.article?.title);
+    }
+    fetchData();
+  }, []);
+
   const onSubmit = (data) => {
     const slug = localStorage.getItem("slug");
 
@@ -189,7 +215,7 @@ function EditArticle() {
           title: data.title,
           description: data.description,
           body: data.textarea,
-          // tagList: data.tags.map((el) => el.name),
+          tagList: data.tags.map((el) => el.name),
         },
       },
     };
@@ -201,6 +227,7 @@ function EditArticle() {
   if (!isAuth && !localStorage.getItem("token")) {
     return <Redirect to="/sign-in" />;
   }
+
   return (
     <FormContainer>
       <FormTitle>Edit article</FormTitle>
@@ -209,11 +236,13 @@ function EditArticle() {
           <label htmlFor="username">
             <TitleInput>Title</TitleInput>
             <Input
+              value={titleInput}
               type="text"
               name="title"
               {...register("title", {
                 required: "The field is required",
               })}
+              onChange={(e) => setTitleInput(e.target.value)}
             />
             {errors?.title && (
               <IncorrectData>{errors?.title?.message}</IncorrectData>
@@ -224,11 +253,13 @@ function EditArticle() {
           <label htmlFor="username">
             <TitleInput>Short description</TitleInput>
             <Input
+              value={shortInput}
               type="text"
               name="description"
               {...register("description", {
                 required: "The field is required",
               })}
+              onChange={(e) => setShortInput(e.target.value)}
             />
             {errors?.description && (
               <IncorrectData>{errors?.description?.message}</IncorrectData>
@@ -237,13 +268,15 @@ function EditArticle() {
         </LabelContainer>
         <LabelContainer>
           <label htmlFor="textarea">
-            <TitleInput>Short description</TitleInput>
+            <TitleInput>Description</TitleInput>
             <TextInput
+              value={bodyInput}
               type="text"
               name="textarea"
               {...register("textarea", {
                 required: "The field is required",
               })}
+              onChange={(e) => setBodyInput(e.target.value)}
             />
             {errors?.textarea && (
               <IncorrectData>{errors?.textarea?.message}</IncorrectData>
