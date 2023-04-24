@@ -3,129 +3,76 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "../service/config";
 import axios from "axios";
 
-export const fetchArticles = createAsyncThunk(
-  "articles/fetchArticles",
-  async function (offset) {
-    try {
-      const response = await fetch(
-        `${BASE_URL}articles?limit=5&offset=${offset}`
-      );
-      if (!response.ok) {
-        throw new Error("Server Error!");
-      }
-      const data = await response.json();
-      return data.articles;
-    } catch (error) {
-      throw error;
-    }
+export const fetchArticles = createAsyncThunk("articles/fetchArticles", async (offset) => {
+  const response = await fetch(`${BASE_URL}articles?limit=5&offset=${offset}`);
+  if (!response.ok) {
+    throw new Error("Server Error!");
   }
-);
+  const data = await response.json();
+  return data.articles;
+});
+
 export const fetchCreateArticle = createAsyncThunk(
   "articles/fetchCreateArticle",
   async (userData) => {
     const token = localStorage.getItem("token");
-    try {
-      const response = await axios.post(
-        `https://blog.kata.academy/api/articles`,
-        userData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-
-      return response.data.article;
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-export const fetchDeleteArticle = createAsyncThunk(
-  "articles/fetchDeleteArticle",
-  async (slug) => {
-    const token = localStorage.getItem("token");
-    try {
-      await axios.delete(
-        `https://blog.kata.academy/api/articles/${slug}`,
-
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-export const fetchEditArticle = createAsyncThunk(
-  "articles/fetchEditArticle",
-  async (payload) => {
-    const { slug, userData } = payload;
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.put(
-        `https://blog.kata.academy/api/articles/${slug}`,
-        userData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-export const fetchLikeArticle = createAsyncThunk(
-  "articles/fetchLikeArticle",
-  async (slug) => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.post(
-        `${BASE_URL}articles/${slug}/favorite`,
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-      return response.data.article;
-    } catch (error) {
-      throw error;
-    }
+    const response = await axios.post(`https://blog.kata.academy/api/articles`, userData, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+    });
+    return response.data.article;
   }
 );
 
-export const fetchLikeDelete = createAsyncThunk(
-  "articles/fetchLikeDelete",
-  async (slug) => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.delete(
-        `https://blog.kata.academy/api/articles/${slug}/favorite`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-      return response.data.article;
-    } catch (error) {
-      throw error;
+export const fetchDeleteArticle = createAsyncThunk("articles/fetchDeleteArticle", async (slug) => {
+  const token = localStorage.getItem("token");
+  await axios.delete(`https://blog.kata.academy/api/articles/${slug}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  });
+});
+
+export const fetchEditArticle = createAsyncThunk("articles/fetchEditArticle", async (payload) => {
+  const { slug, userData } = payload;
+  const token = localStorage.getItem("token");
+  const response = await axios.put(`https://blog.kata.academy/api/articles/${slug}`, userData, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  });
+  return response.data;
+});
+
+export const fetchLikeArticle = createAsyncThunk("articles/fetchLikeArticle", async (slug) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.post(
+    `${BASE_URL}articles/${slug}/favorite`,
+    {},
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
     }
-  }
-);
+  );
+  return response.data.article;
+});
+
+export const fetchLikeDelete = createAsyncThunk("articles/fetchLikeDelete", async (slug) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.delete(`https://blog.kata.academy/api/articles/${slug}/favorite`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  });
+  return response.data.article;
+});
 
 const articlesSlice = createSlice({
   name: "articles",

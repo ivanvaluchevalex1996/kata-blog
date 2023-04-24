@@ -5,15 +5,14 @@ import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDeleteArticle } from "../../store/articlesSlice";
+import { fetchDeleteArticle, fetchLikeArticle, fetchLikeDelete } from "../../store/articlesSlice";
 import { message, Popconfirm } from "antd";
-import { useHistory } from "react-router-dom";
-import { Link } from "react-router-dom"; // 5 версия
+import { useHistory, Link } from "react-router-dom";
 import { selectIsAuth } from "../../store/authSlice";
-import { fetchLikeArticle, fetchLikeDelete } from "../../store/articlesSlice";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { getArticle } from "../../service/config";
+import PropTypes from "prop-types"; // импортируем модуль PropTypes
 
 const Wrapper = styled.article`
   background-color: #ffffff;
@@ -150,16 +149,7 @@ const LikeContainer = styled.span`
 const CardBody = styled.div``;
 
 function Info(props) {
-  const {
-    author,
-    body,
-    createdAt,
-    description,
-    tagList,
-    title,
-    slug,
-    onClick,
-  } = props;
+  const { author, body, createdAt, description, tagList, title, slug, onClick } = props;
 
   const wrapperRef = useRef(null);
   const [height, setHeight] = useState(0);
@@ -184,7 +174,8 @@ function Info(props) {
     const authorName = data?.user?.username;
     return author?.username === authorName;
   };
-
+  const history = useHistory();
+  const dispatch = useDispatch();
   const confirm = () => {
     dispatch(fetchDeleteArticle(slug));
     history.push("/");
@@ -193,14 +184,11 @@ function Info(props) {
     message.error("Click on No");
   };
 
-  const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
-  const history = useHistory();
+
   const [article, setArticle] = useState(null);
   const [likeCount, setLikeCount] = useState(article?.favoritesCount);
-  const [isLiked, setIsLiked] = useState(
-    localStorage.getItem(`like_${slug}`) === "true"
-  );
+  const [isLiked, setIsLiked] = useState(localStorage.getItem(`like_${slug}`) === "true");
 
   const handleLikeClick = () => {
     // проверяем, что пользователь авторизован
@@ -209,7 +197,7 @@ function Info(props) {
         setLikeCount(likeCount + 1);
         setIsLiked(true);
         localStorage.setItem(`like_${slug}`, true);
-        dispatch(fetchLikeArticle(slug)).then((e) => {
+        dispatch(fetchLikeArticle(slug)).then(() => {
           // обновляем состояние только в случае успешного ответа
           setArticle((prevState) => ({
             ...prevState,
@@ -220,7 +208,7 @@ function Info(props) {
         setLikeCount(likeCount - 1);
         setIsLiked(false);
         localStorage.removeItem(`like_${slug}`);
-        dispatch(fetchLikeDelete(slug)).then((e) => {
+        dispatch(fetchLikeDelete(slug)).then(() => {
           // обновляем состояние только в случае успешного ответа
           setArticle((prevState) => ({
             ...prevState,
@@ -234,6 +222,7 @@ function Info(props) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line no-shadow
     axios.get(getArticle(slug)).then(({ data }) => setArticle(data.article));
   }, []);
 
@@ -245,9 +234,7 @@ function Info(props) {
       <CardContainer>
         <CardLeft>
           <TitleContainer>
-            <CardTitle onClick={onClick}>
-              {title.length > 30 ? trimText(title) : title}
-            </CardTitle>
+            <CardTitle onClick={onClick}>{title.length > 30 ? trimText(title) : title}</CardTitle>
             <LikeContainer onClick={handleLikeClick}>
               {isLiked ? <IoHeartSharp color="red" /> : <IoHeartOutline />}
               <LikeCount>{article?.favoritesCount}</LikeCount>
@@ -255,6 +242,7 @@ function Info(props) {
           </TitleContainer>
           <CardTags>
             {tagList?.map((el, i) => (
+              // eslint-disable-next-line react/no-array-index-key
               <Tag key={i + el}>{el}</Tag>
             ))}
           </CardTags>
@@ -263,14 +251,9 @@ function Info(props) {
         <CardRight>
           <CardContainerRight>
             <CardAuthor>{author.username}</CardAuthor>
-            <CardDate>
-              {createdAt ? format(new Date(createdAt), "MMM dd, yyyy") : null}
-            </CardDate>
+            <CardDate>{createdAt ? format(new Date(createdAt), "MMM dd, yyyy") : null}</CardDate>
           </CardContainerRight>
-          <CardImage
-            src={author.image ? author.image : null}
-            alt={author.image}
-          />
+          <CardImage src={author.image ? author.image : null} alt={author.image} />
         </CardRight>
       </CardContainer>
       <CardBody>
@@ -295,5 +278,26 @@ function Info(props) {
     </Wrapper>
   );
 }
+
+Info.defaultProps = {
+  author: {},
+  createdAt: "",
+  tagList: [],
+  onClick: () => {},
+};
+
+Info.propTypes = {
+  author: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+    image: PropTypes.string,
+  }),
+  body: PropTypes.string.isRequired,
+  createdAt: PropTypes.string,
+  description: PropTypes.string.isRequired,
+  tagList: PropTypes.arrayOf(PropTypes.string),
+  title: PropTypes.string.isRequired,
+  slug: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
+};
 
 export default Info;

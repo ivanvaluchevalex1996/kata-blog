@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -11,12 +12,9 @@ const FormContainer = styled.div`
   position: relative;
   background: rgb(255, 255, 255);
   border: 1px solid rgb(217, 217, 217);
-  box-shadow: rgba(0, 0, 0, 0.07) 0px 22px 106px,
-    rgba(0, 0, 0, 0.05) 0px 9.19107px 44.2843px,
-    rgba(0, 0, 0, 0.043) 0px 4.91399px 23.6765px,
-    rgba(0, 0, 0, 0.035) 0px 2.75474px 13.2728px,
-    rgba(0, 0, 0, 0.027) 0px 1.46302px 7.04911px,
-    rgba(0, 0, 0, 0.02) 0px 0.608796px 2.93329px;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 22px 106px, rgba(0, 0, 0, 0.05) 0px 9.19107px 44.2843px,
+    rgba(0, 0, 0, 0.043) 0px 4.91399px 23.6765px, rgba(0, 0, 0, 0.035) 0px 2.75474px 13.2728px,
+    rgba(0, 0, 0, 0.027) 0px 1.46302px 7.04911px, rgba(0, 0, 0, 0.02) 0px 0.608796px 2.93329px;
   border-radius: 6px;
   width: 384px;
   margin: 10px auto 0;
@@ -129,6 +127,7 @@ function EditProfileForm() {
         dispatch(edit(response.data));
         history.push("/");
       })
+      // eslint-disable-next-line no-shadow
       .catch((error) => {
         setError(error.response.data.errors);
       });
@@ -142,7 +141,6 @@ function EditProfileForm() {
           Authorization: `Token ${token}`,
         },
       });
-      console.log(response);
       setUsernameInput(response.data.user.username);
       setEmailInput(response.data.user.email);
     }
@@ -174,9 +172,7 @@ function EditProfileForm() {
               })}
               onChange={(event) => setUsernameInput(event.target.value)}
             />
-            {error?.username && (
-              <IncorrectData>{error?.username}</IncorrectData>
-            )}
+            {error?.username && <IncorrectData>{error?.username}</IncorrectData>}
           </label>
         </LabelContainer>
         <LabelContainer>
@@ -210,9 +206,7 @@ function EditProfileForm() {
                 },
               })}
             />
-            {errors?.password && (
-              <IncorrectData>{errors?.password?.message}</IncorrectData>
-            )}
+            {errors?.password && <IncorrectData>{errors?.password?.message}</IncorrectData>}
           </label>
         </LabelContainer>
         <LabelContainer>
@@ -230,9 +224,7 @@ function EditProfileForm() {
                 },
               })}
             />
-            {errors.imageUrl && (
-              <IncorrectData>{errors.imageUrl.message}</IncorrectData>
-            )}
+            {errors.imageUrl && <IncorrectData>{errors.imageUrl.message}</IncorrectData>}
           </label>
         </LabelContainer>
         <SubmitButton value="Create" disabled={!isValid} />

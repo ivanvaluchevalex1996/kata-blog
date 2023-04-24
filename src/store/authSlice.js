@@ -1,58 +1,42 @@
+/* eslint-disable no-param-reassign */
 // /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "../service/config";
 import axios from "axios";
 
-export const fetchAuth = createAsyncThunk(
-  "auth/fetchAuth",
-  async (userData) => {
-    try {
-      const response = await axios.post(`${BASE_URL}users/login`, userData);
-      localStorage.setItem("token", response.data.user.token);
-      localStorage.setItem("data", JSON.stringify(response.data));
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+export const fetchAuth = createAsyncThunk("auth/fetchAuth", async (userData) => {
+  const response = await axios.post(`${BASE_URL}users/login`, userData);
+  localStorage.setItem("token", response.data.user.token);
+  localStorage.setItem("data", JSON.stringify(response.data));
+  return response.data;
+});
+export const fetchRegister = createAsyncThunk("auth/fetchRegister", async (userData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}users`, userData);
+    localStorage.setItem("token", response.data.user.token);
+    localStorage.setItem("data", JSON.stringify(response.data));
+    return response.data;
+  } catch (e) {
+    throw new Error("request error");
   }
-);
-export const fetchRegister = createAsyncThunk(
-  "auth/fetchRegister",
-  async (userData) => {
-    try {
-      const response = await axios.post(`${BASE_URL}users`, userData);
-      localStorage.setItem("token", response.data.user.token);
-      localStorage.setItem("data", JSON.stringify(response.data));
-      return response.data;
-    } catch (e) {
-      throw new Error("request error");
-    }
-  }
-);
+});
 
-export const fetchEditData = createAsyncThunk(
-  "auth/fetchRegister",
-  async (userData) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${BASE_URL}user`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify(userData),
-      });
-      const data = await response.json();
-      // в этом запросе при перезагрузке страницы токен обновлялся поэтому выбрасывало из учетки
-      localStorage.setItem("data", JSON.stringify(data));
-      localStorage.setItem("image", JSON.stringify(data.user.image));
-      return data;
-    } catch (e) {
-      throw e;
-    }
-  }
-);
+export const fetchEditData = createAsyncThunk("auth/fetchRegister", async (userData) => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}user`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
+  const data = await response.json();
+  // в этом запросе при перезагрузке страницы токен обновлялся поэтому выбрасывало из учетки
+  localStorage.setItem("data", JSON.stringify(data));
+  localStorage.setItem("image", JSON.stringify(data.user.image));
+  return data;
+});
 
 // при перезагрузке страницы, чтобы не выбрасывало
 export const initAuth = createAsyncThunk("auth/initAuth", async () => {
@@ -65,9 +49,8 @@ export const initAuth = createAsyncThunk("auth/initAuth", async () => {
     });
     localStorage.setItem("data", JSON.stringify(response.data));
     return response.data;
-  } else {
-    return null;
   }
+  return null;
 });
 
 const initialState = {

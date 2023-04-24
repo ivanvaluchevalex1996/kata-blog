@@ -1,21 +1,19 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import { selectIsAuth } from "../store/authSlice";
-import { Redirect } from "react-router-dom";
+
 import { fetchCreateArticle } from "../store/articlesSlice";
 
 const FormContainer = styled.div`
   position: relative;
   background: rgb(255, 255, 255);
   border: 1px solid rgb(217, 217, 217);
-  box-shadow: rgba(0, 0, 0, 0.07) 0px 22px 106px,
-    rgba(0, 0, 0, 0.05) 0px 9.19107px 44.2843px,
-    rgba(0, 0, 0, 0.043) 0px 4.91399px 23.6765px,
-    rgba(0, 0, 0, 0.035) 0px 2.75474px 13.2728px,
-    rgba(0, 0, 0, 0.027) 0px 1.46302px 7.04911px,
-    rgba(0, 0, 0, 0.02) 0px 0.608796px 2.93329px;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 22px 106px, rgba(0, 0, 0, 0.05) 0px 9.19107px 44.2843px,
+    rgba(0, 0, 0, 0.043) 0px 4.91399px 23.6765px, rgba(0, 0, 0, 0.035) 0px 2.75474px 13.2728px,
+    rgba(0, 0, 0, 0.027) 0px 1.46302px 7.04911px, rgba(0, 0, 0, 0.02) 0px 0.608796px 2.93329px;
   border-radius: 6px;
   width: 850px;
   margin: 10px auto 0;
@@ -220,9 +218,7 @@ function CreateArticle() {
                 required: "The field is required",
               })}
             />
-            {errors?.title && (
-              <IncorrectData>{errors?.title?.message}</IncorrectData>
-            )}
+            {errors?.title && <IncorrectData>{errors?.title?.message}</IncorrectData>}
           </label>
         </LabelContainer>
         <LabelContainer>
@@ -235,9 +231,7 @@ function CreateArticle() {
                 required: "The field is required ",
               })}
             />
-            {errors?.description && (
-              <IncorrectData>{errors?.description?.message}</IncorrectData>
-            )}
+            {errors?.description && <IncorrectData>{errors?.description?.message}</IncorrectData>}
           </label>
         </LabelContainer>
         <LabelContainer>
@@ -250,56 +244,50 @@ function CreateArticle() {
                 required: "The field is required ",
               })}
             />
-            {errors?.textarea && (
-              <IncorrectData>{errors?.textarea?.message}</IncorrectData>
-            )}
+            {errors?.textarea && <IncorrectData>{errors?.textarea?.message}</IncorrectData>}
           </label>
         </LabelContainer>
         <div>
           <TitleTag>Tags</TitleTag>
         </div>
         {fields.length > 0 ? (
-          fields.map((field, index) => {
-            return (
-              <section key={field.id}>
-                <label htmlFor={`tags.${index}.name`}>
-                  <TagInput
-                    type="text"
-                    name={`tags.${index}.name`}
-                    {...register(`tags.${index}.name`, {
-                      required: "The field is required ",
-                    })}
-                  />
-                </label>
-                <ButtonDeleteTag
+          fields.map((field, index) => (
+            <section key={field.id}>
+              <label htmlFor={`tags.${index}.name`}>
+                <TagInput
+                  type="text"
+                  name={`tags.${index}.name`}
+                  {...register(`tags.${index}.name`, {
+                    required: "The field is required ",
+                  })}
+                />
+              </label>
+              <ButtonDeleteTag
+                type="button"
+                onClick={() => {
+                  remove(index);
+                }}
+              >
+                Delete Tag
+              </ButtonDeleteTag>
+              {index === fields.length - 1 && (
+                <ButtonAddTag
                   type="button"
                   onClick={() => {
-                    remove(index);
+                    append({
+                      name: "",
+                    });
                   }}
                 >
-                  Delete Tag
-                </ButtonDeleteTag>
-                {index === fields.length - 1 && (
-                  <ButtonAddTag
-                    type="button"
-                    onClick={() => {
-                      append({
-                        name: "",
-                      });
-                    }}
-                  >
-                    Add Tag
-                  </ButtonAddTag>
-                )}
+                  Add Tag
+                </ButtonAddTag>
+              )}
 
-                {index === fields.length - 1 && field.name === "" && (
-                  <WarningData>
-                    Перед отправкой формы, убедитесь что поле не пустое.
-                  </WarningData>
-                )}
-              </section>
-            );
-          })
+              {index === fields.length - 1 && field.name === "" && (
+                <WarningData>Перед отправкой формы, убедитесь что поле не пустое.</WarningData>
+              )}
+            </section>
+          ))
         ) : (
           <ButtonAddTag
             type="button"

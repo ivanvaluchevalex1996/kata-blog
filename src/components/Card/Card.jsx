@@ -6,6 +6,8 @@ import { fetchLikeArticle, fetchLikeDelete } from "../../store/articlesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsAuth } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
+import PropTypes from "prop-types"; // импортируем модуль PropTypes
+
 const Wrapper = styled.article`
   background-color: #ffffff;
   overflow: hidden;
@@ -127,9 +129,7 @@ function Card({
     <Wrapper>
       <CardLeft>
         <TitleContainer>
-          <CardTitle onClick={onClick}>
-            {title.length > 30 ? trimText(title) : title}
-          </CardTitle>
+          <CardTitle onClick={onClick}>{title.length > 30 ? trimText(title) : title}</CardTitle>
           <LikeContainer onClick={handleLikeClick}>
             {localStorage.getItem(`like_${slug}`) ? (
               <IoHeartSharp color="red" />
@@ -141,6 +141,7 @@ function Card({
         </TitleContainer>
         <CardTags>
           {tags?.map((el, i) => (
+            // eslint-disable-next-line react/no-array-index-key
             <Tag key={i + el}>{el}</Tag>
           ))}
         </CardTags>
@@ -149,14 +150,30 @@ function Card({
       <CardRight>
         <CardContainerRight>
           <CardAuthor>{username}</CardAuthor>
-          <CardDate>
-            {date ? format(new Date(date), "MMM dd, yyyy") : null}
-          </CardDate>
+          <CardDate>{date ? format(new Date(date), "MMM dd, yyyy") : null}</CardDate>
         </CardContainerRight>
-        <CardImage src={img ? img : null} alt={username} />
+        <CardImage src={img || null} alt={username} />
       </CardRight>
     </Wrapper>
   );
 }
+
+Card.propTypes = {
+  username: PropTypes.string.isRequired,
+  img: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  date: PropTypes.string,
+  description: PropTypes.string.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string),
+  likesNumber: PropTypes.number.isRequired,
+  favorited: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  slug: PropTypes.string.isRequired,
+};
+Card.defaultProps = {
+  tags: [],
+  date: "no data",
+  img: "https://static.productionready.io/images/smiley-cyrus.jpg",
+};
 
 export default Card;

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
@@ -16,11 +17,7 @@ function Details() {
 
   return (
     <div>
-      {article ? (
-        <Info push={push} {...article} />
-      ) : (
-        <Skeleton style={{ marginTop: "20px" }} />
-      )}
+      {article ? <Info push={push} {...article} /> : <Skeleton style={{ marginTop: "20px" }} />}
     </div>
   );
 }
