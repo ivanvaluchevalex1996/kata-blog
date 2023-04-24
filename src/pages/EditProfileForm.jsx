@@ -132,7 +132,7 @@ function EditProfileForm() {
         setError(error.response.data.errors);
       });
   };
-  // запрос для отображения старых данных пользователя при переходе на редактирование
+  // запрос для отображения старых данных пользователя при переходе на редактирование.
   useEffect(() => {
     async function fetchData() {
       const token = localStorage.getItem("token");
