@@ -25,6 +25,7 @@ function App() {
   const error = status === "rejected" && (
     <Alert message="Произошла ошибка. Мы уже работаем над этим." type="error" showIcon />
   );
+  //
   useEffect(() => {
     axios.get(getArticle(slug)).then(({ data }) => setArticle(data.article));
   }, [slug]);
